@@ -16,7 +16,7 @@ app honeycomb {
 
 route RootRoute { path: "/", to: LandingPage }
 page LandingPage {
-  component: import Main from "@client/MainPage"
+  component: import Main from "@client/LandingPage"
 }
 
 route LoginRoute { path: "/login", to: LoginPage }
@@ -27,12 +27,6 @@ page LoginPage {
 route SignupRoute { path: "/signup", to: Signup }
 page Signup {
   component: import Signup from "@client/SignupPage"
-}
-
-// args: { name: string, email: string, password: string }
-action signUp {
-  fn: import { signUp } from "@server/api/account.js",
-  entities: [User]
 }
 
 // requires auth
@@ -60,7 +54,7 @@ query getUserRecipe {
 }
 
 entity User {=psl
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement()) // Required to be Int by usernameAndPassword method
   name String
   username String @unique // This is actually email, but usernameAndPassword method requires it be called username
   password String
@@ -86,7 +80,7 @@ entity Recipe {=psl
   tags RecipeTag[]
 
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId String
+  ownerId Int
 psl=}
 
 entity Ingredient {=psl
@@ -105,5 +99,5 @@ entity RecipeTag {=psl
   recipes Recipe[]
 
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId String
+  ownerId Int
 psl=}

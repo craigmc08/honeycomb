@@ -1,0 +1,10 @@
+.footer {
+  width: 100%;
+  border-top: 2px solid var(--border);
+  color: var(--primary-light);
+  padding: 16px 0;
+  font-size: 12px;
+}
+.footer a {
+  color: var(--accent-light);
+}
