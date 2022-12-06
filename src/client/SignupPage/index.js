@@ -39,12 +39,13 @@ const SignupPage = (_props) => {
       <h1>Sign up</h1>
       <p>Create your free Honeycomb account!</p>
       <Form onSubmit={handleSubmit}>
-        <Form.Text required name="name" placeholder="Your Name" />
+        <Form.Text required name="name" placeholder="Your Name" autoFocus />
         <Form.Text required name="email" placeholder="Email" />
         <Form.Password required name="password" placeholder="Password" />
         <Form.Password required name="confirm_password" placeholder="Confirm Password" />
         <Form.Submit value="Create my account" />
       </Form>
+      <p className="text-small">Your password must be at least 8 characters long.</p>
     </Form.Page>
   )
 }

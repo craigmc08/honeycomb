@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<svg height="519.61524228" width="500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<defs>
+	<g id="Hexagon">
+		<polygon points="
+		0,-57.73502692
+		50,-28.86751346 
+		50,28.86751346
+		0, 57.73502692
+		-50,28.86751346
+		-50,-28.86751346 " stroke="#222" stroke-width="2"/>
+	</g>
+</defs>
+
+<use xlink:href="#Hexagon" transform="translate(50 519.61524228)" fill="#0a0a0a"/>
+<use xlink:href="#Hexagon" transform="translate(150 519.61524228)" fill="#111"/>
+<use xlink:href="#Hexagon" transform="translate(250 519.61524228)" fill="#0a0a0a"/>
+<use xlink:href="#Hexagon" transform="translate(350 519.61524228)" fill="#0d0d0d"/>
+<use xlink:href="#Hexagon" transform="translate(450 519.61524228)" fill="#0d0d0d"/>
+
+<use xlink:href="#Hexagon" transform="translate(0 433.0127019)" fill="#0d0d0d"/>
+<use xlink:href="#Hexagon" transform="translate(100 433.0127019)" fill="#0d0d0d"/>
+<use xlink:href="#Hexagon" transform="translate(200 433.0127019)" fill="#0d0d0d"/>
+<use xlink:href="#Hexagon" transform="translate(300 433.0127019)" fill="#111"/>
+<use xlink:href="#Hexagon" transform="translate(400 433.0127019)" fill="#0a0a0a"/>
+<use xlink:href="#Hexagon" transform="translate(500 433.0127019)" fill="#0d0d0d"/>
+
+<use xlink:href="#Hexagon" transform="translate(50 346.41016152)" fill="#111"/>
+<use xlink:href="#Hexagon" transform="translate(150 346.41016152)" fill="#0a0a0a"/>
+<use xlink:href="#Hexagon" transform="translate(250 346.41016152)" fill="#0d0d0d"/>
+<use xlink:href="#Hexagon" transform="translate(350 346.41016152)" fill="#0d0d0d"/>
+<use xlink:href="#Hexagon" transform="translate(450 346.41016152)" fill="#111"/>
+
+<use xlink:href="#Hexagon" transform="translate(0 259.80762114)" fill="#0d0d0d"/>
+<use xlink:href="#Hexagon" transform="translate(100 259.80762114)" fill="#0d0d0d"/>
+<use xlink:href="#Hexagon" transform="translate(200 259.80762114)" fill="#111"/>
+<use xlink:href="#Hexagon" transform="translate(300 259.80762114)" fill="#0d0d0d"/>
+<use xlink:href="#Hexagon" transform="translate(400 259.80762114)" fill="#0a0a0a"/>
+<use xlink:href="#Hexagon" transform="translate(500 259.80762114)" fill="#0d0d0d"/>
+
+<use xlink:href="#Hexagon" transform="translate(50 173.20508076)" fill="#111"/>
+<use xlink:href="#Hexagon" transform="translate(150 173.20508076)" fill="#0a0a0a"/>
+<use xlink:href="#Hexagon" transform="translate(250 173.20508076)" fill="#0d0d0d"/>
+<use xlink:href="#Hexagon" transform="translate(350 173.20508076)" fill="#111"/>
+<use xlink:href="#Hexagon" transform="translate(450 173.20508076)" fill="#0a0a0a"/>
+
+<use xlink:href="#Hexagon" transform="translate(0 86.60254038)" fill="#0d0d0d"/>
+<use xlink:href="#Hexagon" transform="translate(100 86.60254038)" fill="#0a0a0a"/>
+<use xlink:href="#Hexagon" transform="translate(200 86.60254038)" fill="#0d0d0d"/>
+<use xlink:href="#Hexagon" transform="translate(300 86.60254038)" fill="#0a0a0a"/>
+<use xlink:href="#Hexagon" transform="translate(400 86.60254038)" fill="#111"/>
+<use xlink:href="#Hexagon" transform="translate(500 86.60254038)" fill="#0d0d0d"/>
+
+<use xlink:href="#Hexagon" transform="translate(50 0)" fill="#0a0a0a"/>
+<use xlink:href="#Hexagon" transform="translate(150 0)" fill="#111"/>
+<use xlink:href="#Hexagon" transform="translate(250 0)" fill="#0a0a0a"/>
+<use xlink:href="#Hexagon" transform="translate(350 0)" fill="#0d0d0d"/>
+<use xlink:href="#Hexagon" transform="translate(450 0)" fill="#0d0d0d"/>
+</svg>

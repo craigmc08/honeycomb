@@ -21,7 +21,7 @@ export async function getUserRecipes(args, context) {
     where.title = { contains: args.q };
   }
 
-  return context.entities.Recipe.findMany({
+  const recipes = await context.entities.Recipe.findMany({
     where,
     select: {
       slug: true,
@@ -34,18 +34,24 @@ export async function getUserRecipes(args, context) {
     },
     orderBy: { title: 'asc' }
   });
+  return recipes.map(recipe => ({
+    slug: recipe.slug,
+    title: recipe.title,
+    tagSlugs: recipe.tags.map(tag => tag.slug),
+  }));
 }
 
 export async function getUserTags(_args, context) {
   if (!context.user) { throw new HttpError(401); }
 
-  return context.entities.RecipeTags.findMany({
+  return context.entities.RecipeTag.findMany({
     where: {
       owner: { id: context.user.id },
     },
     select: {
       slug: true,
       tag: true,
+      color: true,
     },
   });
 }

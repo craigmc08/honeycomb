@@ -31,14 +31,13 @@ const LoginPage = (_props) => {
       <h1>Log In</h1>
       <p>No account? <Link to="/signup">Sign up</Link></p>
       <Form onSubmit={handleSubmit}>
-        <Form.Text required name="email" placeholder="Email" />
+        <Form.Text required name="email" placeholder="Email" autoFocus />
         <Form.Password required name="password" placeholder="Password" />
         <Flex flow={Flex.Row} spacing={Flex.Pack} gap="16px">
           <Form.Submit value="Log in" />
           <Link className="link-small" to="/password-reset">I forgot my password</Link>
         </Flex>
       </Form>
-      <p className="text-small">Your password must be at least 8 characters long.</p>
     </Form.Page>
   )
 }

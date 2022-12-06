@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Footer from '../Footer';
 import './form.css';
+import hexBg from '../hex-bg.svg'
 
 const Form = (props) => {
   const [flashMessage, setFlashMessage] = useState(undefined);
@@ -33,9 +34,11 @@ const Form = (props) => {
 
 Form.Page = (props) => {
   return (
-    <main className="form-page">
-      {props.children}
-      <Footer />
+    <main className="form-page" style={{ backgroundImage: `url(${hexBg})` }}>
+      <div className="form-content">
+        {props.children}
+        <Footer />
+      </div>
     </main>
   );
 }

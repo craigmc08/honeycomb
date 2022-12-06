@@ -1,0 +1,46 @@
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+.recipes-search {
+  display: flex;
+  gap: 16px;
+  padding: 16px 32px;
+}
+
+.recipes-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.recipe-item:not(:first-child) {
+  border-top: 2px solid var(--border);
+}
+
+.recipe-item {
+  font-size: 18px;
+  display: flex;
+  gap: 8px;
+  padding: 16px 32px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.recipe-item-tags {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  font-size: 12px;
+}
+
+.recipe-tag {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  background-color: hsl(var(--tag-hue), 20%, 35%);
+  border: 1px solid hsl(var(--tag-hue), 20%, 70%);
+  color: hsl(var(--tag-hue), 20%, 70%);
+  border-radius: 9999px; /* make sure its fully rounded */
+  padding: 2px 4px;
+}
