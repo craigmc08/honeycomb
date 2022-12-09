@@ -276,10 +276,17 @@ SEARCHBAR
   flex-direction: column;
 }
 
+@keyframes slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(20px); }
+}
+
 .tag-filters-container {
   display: flex;
   gap: 8px;
   overflow-x: auto;
+  position: relative;
+  align-items: center;
 }
 .tag-filters-clear {
   display: none;
@@ -288,6 +295,7 @@ SEARCHBAR
   color: var(--primary-light);
   padding: 0;
   font-size: 16px;
+  position: absolute;
 }
 .tag-filters-clear[data-show=true] {
   display: block;
@@ -295,6 +303,11 @@ SEARCHBAR
 .tag-filters {
   display: flex;
   gap: 8px;
+  transition: transform 0.2s ease-in-out;
+  transform: translateX(0);
+}
+.tag-filters-clear[data-show=true] + .tag-filters {
+  transform: translateX(20px);
 }
 .tag-filters .recipe-tag {
   opacity: 50%;
