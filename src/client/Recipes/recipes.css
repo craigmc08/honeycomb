@@ -9,12 +9,6 @@ PAGE LAYOUT
   gap: 8px;
 }
 
-@media only screen and (min-width: 600px) {
-  .page {
-    padding: 32px 64px;
-  }
-}
-
 .page h1 {
   padding: 0 32px;
   font-size: 36px;
@@ -30,6 +24,90 @@ PAGE LAYOUT
 .footer {
   margin: 0 32px;
   width: auto;
+}
+
+@media only screen and (min-width: 600px) {
+  .page {
+    padding: 32px 64px;
+    gap: 16px;
+    min-height: 100vh;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: solid 2px var(--border);
+  }
+
+  .page h1 {
+    padding: 0;
+  }
+
+  .recipes-main {
+    flex-grow: 1;
+  }
+
+  .footer-space {
+    flex-grow: 1;
+  }
+
+  .footer {
+    margin: 0;
+  }
+}
+
+
+
+
+
+/*======================================
+RECENT RECIPES
+======================================*/
+
+.recipes-recent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 32px;
+}
+
+.recipes-recent h2 {
+  font-size: 15px;
+  color: var(--primary-light);
+}
+
+.recent-list {
+  display: flex;
+  gap: 8px;
+  overflow: auto;
+}
+
+.recent-item {
+  display: block;
+  border: solid 2px hsl(var(--tag-hue), 100%, 85%);
+  border-radius: 1000px;
+  overflow: clip;
+  width: 48px;
+  height: 48px;
+}
+.recent-item img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+@media only screen and (min-width: 600px) {
+  .recipes-recent {
+    padding: 8px 0;
+  }
+  .recipes-recent h2 {
+    font-size: 20px;
+  }
+  .recent-item {
+    width: 64px;
+    height: 64px;
+  }
 }
 
 
@@ -57,9 +135,13 @@ RECIPE CARDS
   color: var(--primary);
   text-decoration: none;
 }
-.recipe-item img {
+.recipe-thumbnail {
   height: 48px;
   width: 48px;
+}
+.recipe-thumbnail img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 .recipe-content {
@@ -79,12 +161,6 @@ RECIPE CARDS
   gap: 4px;
 }
 
-@media only screen and (min-width: 600px) {
-  .recipe-content > p {
-    display: block;
-  }
-}
-
 .recipe-tag {
   --tag-primary: hsl(var(--tag-hue), 100%, 85%);
   --tag-bg: hsl(var(--tag-hue), 20%, 35%);
@@ -95,6 +171,89 @@ RECIPE CARDS
   padding: 2px 6px;
   width: fit-content;
   font-size: 12px;
+}
+
+.recipe-overflow-btn {
+  background: none;
+  border: none;
+  padding: none;
+  color: var(--primary);
+  font-size: 24px;
+}
+
+@media only screen and (min-width: 600px) {
+
+  .recipes-list {
+    display: grid;
+    gap: 32px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    align-items: stretch;
+    padding-top: 16px;
+  }
+
+  .recipes-list > :not(:first-child) {
+    border: none;
+  }
+
+  .recipe-item {
+    border: solid 2px var(--border);
+    border-radius: 8px;
+    background-color: var(--contrast-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0;
+    height: 100%;
+
+    position: relative;
+
+    overflow: clip;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .recipe-item:hover {
+    border-color: var(--accent-light);
+    transform: scale(1.02, 1.02);
+  }
+
+  .recipe-thumbnail {
+    height: 140px;
+    width: 100%;
+    position: relative;
+  }
+  .recipe-thumbnail::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(var(--contrast-dark), rgba(0,0,0,0));
+    opacity: 0.5;
+  }
+
+  .recipe-content {
+    width: 100%;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .recipe-content > h2 {
+    font-size: 20px;
+  }
+  
+  .recipe-content > p {
+    display: block;
+    font-size: 15px;
+    color: var(--primary-light);
+    line-height: 1.2em;
+  }
+
+  .recipe-overflow-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
 }
 
 

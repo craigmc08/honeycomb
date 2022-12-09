@@ -44,3 +44,21 @@
 .nav-item-name {
   font-size: 12px;
 }
+
+@media only screen and (min-width: 600px) {
+  .toolbar {
+    height: auto;
+    position: relative;
+    background: none;
+    margin: 16px 0;
+  }
+
+  .nav {
+    width: fit-content;
+    gap: 32px;
+    height: auto;
+  }
+  .nav-item:not(:first-child) {
+    border: none;
+  }
+}

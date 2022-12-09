@@ -46,3 +46,7 @@ a.link-small {
   font-size: 15px;
   color: var(--primary-light);
 }
+
+button {
+  cursor: pointer;
+}

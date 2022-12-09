@@ -30,9 +30,10 @@ const RecipesPage = (_props) => {
         </Toolbar>
       </nav>
       <main className="recipes-main">
-        <RecentRecipes recipes={recipes} />
+        <RecentRecipes tags={tags} recipes={recipes} />
         <RecipesSearch tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
         <RecipesList recipes={recipes} tags={tags} q={q} selectedTags={selectedTags} />
+        <div className="footer-space"></div>
         <Footer />
       </main>
     </div>
@@ -41,7 +42,40 @@ const RecipesPage = (_props) => {
 
 function RecentRecipes(props) {
   // TODO unimplemented (and unstyled)
-  return null;
+  // TODO: implement API endpoint for this and grab the data from there;
+  const recentRecipes = [
+    { slug: 'pigs-in-a-blanket-gd4hzl52kb', imageURI: 'https://hips.hearstapps.com/delish/assets/18/08/1519247372-delish-pigs-in-a-blanket.jpg', tagSlugs: ['appetizer-dl648gjx9f', 'cheap-d85jgz856l'] }
+  ];
+
+  const coloredRecentRecipes = recentRecipes && recentRecipes.map(recipe => {
+    let color = '0';
+    if (props.tags && recipe.tagSlugs.length >= 1) {
+      const tag = props.tags.find(t => t.slug === recipe.tagSlugs[0]);
+      if (tag) { color = tag.color; }
+    }
+    return { ...recipe, color };
+  });
+
+  return (
+    <div className="recipes-recent">
+      <h2>Recent Recipes</h2>
+      {recentRecipes && (
+        recentRecipes.length === 0
+          ? (<p>No recent activity</p>)
+          : (
+            <ul className="recent-list">
+              {coloredRecentRecipes.map(({ slug, imageURI, color }) => (
+                <li key={slug}>
+                  <Link className="recent-item" to={`/recipe/${slug}`} style={{ '--tag-hue': color }}>
+                    <img src={imageURI} />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )
+      )}
+    </div>
+  )
 }
 
 function RecipesSearch(props) {
@@ -54,7 +88,7 @@ function RecipesSearch(props) {
     if (tagIdx === -1) {
       setSelectedTags([...selectedTags, slug].sort());
     } else {
-      setSelectedTags(selectedTags.filter(s => s != slug));
+      setSelectedTags(selectedTags.filter(s => s !== slug));
     }
   }
   const tagActive = (slug) => selectedTags.includes(slug);
@@ -112,7 +146,9 @@ function Recipe(props) {
   return (
     <li>
       <Link className="recipe-item" to={`/recipe/${props.recipe.slug}`}>
-        <img className="recipe-thumbnail" src={props.recipe.imageURI} width="auto" alt="" />
+        <div className="recipe-thumbnail">
+          <img src={props.recipe.imageURI} alt="" />
+        </div>
         <div className="recipe-content">
           <h2>{props.recipe.title}</h2>
           <ul className="recipe-item-tags">
@@ -120,7 +156,9 @@ function Recipe(props) {
           </ul>
           <p>{props.recipe.description}</p>
         </div>
-        <FontAwesomeIcon icon={faEllipsisV} />
+        <button className="recipe-overflow-btn">
+          <FontAwesomeIcon icon={faEllipsisV} />
+        </button>
       </Link>
     </li>
   );
