@@ -24,7 +24,7 @@
   color: var(--error);
 }
 
-.form-content .input-text {
+.form-text {
   background: none;
   border: none;
   border-bottom: 2px solid var(--border);
@@ -34,18 +34,18 @@
   color: white;
   transition: 0.2s linear border-color;
 }
-.form-content .input-text::placeholder {
+.form-text::placeholder {
   color: var(--primary-light);
   transition: 0.2s linear color;
 }
-.form-content .input-text:active, .form-content .input-text:focus {
+.form-text:active, .form-text:focus {
   border-bottom-color: var(--border-accent);
 }
-.form-content .input-text:active::placeholder, .form-content .input-text:focus::placeholder {
+.form-text:active::placeholder, .form-text:focus::placeholder {
   color: var(--accent-light);
 }
 
-.form-content input[type=submit] {
+.form-submit {
   align-self: start;
 }
 

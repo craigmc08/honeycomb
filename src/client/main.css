@@ -2,6 +2,7 @@ body {
 	--primary: #ffffff;
 	--primary-light: #ffffff80;
 	--contrast: #221a00;
+  --contrast-dark: #110d00;
 	--accent: #ffc300;
 	--accent-light: #ffc30080;
 	--border: #ffffff33;

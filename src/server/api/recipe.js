@@ -26,6 +26,8 @@ export async function getUserRecipes(args, context) {
     select: {
       slug: true,
       title: true,
+      description: true,
+      imageURI: true,
       tags: {
         select: {
           slug: true,
@@ -37,6 +39,8 @@ export async function getUserRecipes(args, context) {
   return recipes.map(recipe => ({
     slug: recipe.slug,
     title: recipe.title,
+    description: recipe.description,
+    imageURI: recipe.imageURI,
     tagSlugs: recipe.tags.map(tag => tag.slug),
   }));
 }

@@ -40,3 +40,7 @@ Things I would like to see but it isn't that bad to not have them:
 
 2.  Type hints for prisma queries in my action/operation functions would be very
     helpful.
+
+3.  Having `wasp add` or `wasp install` or something that adds to the dependencies
+    list in the project `.wasp` file in the current directory would be helpful,
+    that way I don't have to manually find the latest version number for a package

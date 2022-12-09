@@ -45,19 +45,19 @@ Form.Page = (props) => {
 
 Form.Text = (props) => {
   return (
-    <input type="text" className="input-text" {...props} />
+    <input type="text" className="form-text" {...props} />
   );
 }
 
 Form.Password = (props) => {
   return (
-    <input type="password" className="input-text" {...props} />
+    <input type="password" className="form-text" {...props} />
   );
 }
 
 Form.Submit = (props) => {
   return (
-    <input className="cta-button" type="submit" {...props} />
+    <input className="cta-button form-submit" type="submit" {...props} />
   );
 }
 

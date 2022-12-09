@@ -1,0 +1,46 @@
+.toolbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--contrast-dark);
+
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.toolbar > :not(:first-child) {
+  border-bottom: solid 2px var(--border)
+}
+
+.nav {
+  height: 56px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-item {
+  flex-grow: 1;
+  --nav-item-color: var(--primary-light);
+}
+
+.nav-item.active {
+  --nav-item-color: var(--accent);
+}
+
+.nav-item:not(:first-child) {
+  border-left: solid 2px var(--border);
+}
+
+.nav-item a {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  font-size: 24px;
+  text-decoration: none;
+  color: var(--nav-item-color);
+}
+.nav-item-name {
+  font-size: 12px;
+}

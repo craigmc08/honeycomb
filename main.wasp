@@ -10,7 +10,13 @@ app honeycomb {
     },
     onAuthFailedRedirectTo: "/",
     onAuthSucceededRedirectTo: "/recipes"
-  }
+  },
+  dependencies: [
+    ("@fortawesome/fontawesome-svg-core", "6.2.1"),
+    ("@fortawesome/react-fontawesome", "0.2.0"),
+    ("@fortawesome/free-solid-svg-icons", "6.2.1"),
+    ("@fortawesome/free-regular-svg-icons", "6.2.1")
+  ]
 }
 
 
@@ -36,7 +42,7 @@ page Recipes {
 
 // requires auth
 // args: { tagSlugs?: [String], q?: String }
-// returns: [{ slug: String, title: String, tagSlugs: String }]
+// returns: [{ slug: String, title: String, description: String, imageURI?: String, tagSlugs: String }]
 query getUserRecipes {
   fn: import { getUserRecipes } from "@server/api/recipe.js",
   entities: [Recipe]

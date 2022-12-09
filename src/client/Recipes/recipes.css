@@ -1,46 +1,228 @@
+/*======================================
+PAGE LAYOUT
+======================================*/
+
 .page {
+  padding: 200px 0 0 0;
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
-.recipes-search {
-  display: flex;
-  gap: 16px;
-  padding: 16px 32px;
+@media only screen and (min-width: 600px) {
+  .page {
+    padding: 32px 64px;
+  }
 }
+
+.page h1 {
+  padding: 0 32px;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.recipes-main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer {
+  margin: 0 32px;
+  width: auto;
+}
+
+
+
+
+
+/*======================================
+RECIPE CARDS
+======================================*/
 
 .recipes-list {
   display: flex;
   flex-direction: column;
 }
-
-.recipe-item:not(:first-child) {
-  border-top: 2px solid var(--border);
+.recipes-list > :not(:first-child) {
+  border-top: solid 2px var(--border);
 }
 
 .recipe-item {
-  font-size: 18px;
+  padding: 8px 32px;
   display: flex;
   gap: 8px;
-  padding: 16px 32px;
+  height: min-content;
   align-items: center;
-  justify-content: space-between;
+  color: var(--primary);
+  text-decoration: none;
 }
-
+.recipe-item img {
+  height: 48px;
+  width: 48px;
+  object-fit: cover;
+}
+.recipe-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.recipe-content h2 {
+  font-size: 15px;
+}
+.recipe-content > p {
+  display: none;
+}
 .recipe-item-tags {
   display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  font-size: 12px;
+  gap: 4px;
+}
+
+@media only screen and (min-width: 600px) {
+  .recipe-content > p {
+    display: block;
+  }
 }
 
 .recipe-tag {
-  height: 100%;
+  --tag-primary: hsl(var(--tag-hue), 100%, 85%);
+  --tag-bg: hsl(var(--tag-hue), 20%, 35%);
+  background-color: var(--tag-bg);
+  border: solid 2px var(--tag-primary);
+  color: var(--tag-primary);
+  border-radius: 1000px;
+  padding: 2px 6px;
+  width: fit-content;
+  font-size: 12px;
+}
+
+
+
+
+
+/*======================================
+SEARCHBAR
+======================================*/
+
+.recipes-search {
+  display: none;
+  flex-direction: column-reverse;
+  gap: 16px;
+}
+.recipes-search[data-toolbar] {
   display: flex;
+  padding: 16px 32px;
+  gap: 8px;
+  flex-direction: column;
+}
+
+.tag-filters-container {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+.tag-filters-clear {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--primary-light);
+  padding: 0;
+  font-size: 16px;
+}
+.tag-filters-clear[data-show=true] {
+  display: block;
+}
+.tag-filters {
+  display: flex;
+  gap: 8px;
+}
+.tag-filters .recipe-tag {
+  opacity: 50%;
+}
+.tag-filters .recipe-tag:hover {
+  opacity: 70%;
+}
+.tag-filters .recipe-tag.active {
+  opacity: 100%;
+}
+
+.recipes-search-flow {
+  display: flex;
+  gap: 8px;
+}
+.searchfield-container {
+  flex-grow: 1;
+  position: relative;
+  max-width: 500px;
+}
+[data-toolbar] .searchfield-container {
+  max-width: none;
+}
+.searchfield-clear {
+  position: absolute;
+  right: 8px;
+  top: 0;
+  bottom: 0;
+  color: var(--primary-light);
+  background: none;
+  border: none;
+  display: none;
+}
+.searchfield-clear[data-show=true] {
+  display: block;
+}
+[data-toolbar] .searchfield {
+  width: 100%;
+  background-color: var(--border);
+  border-radius: 1000px;
+  padding: 4px 16px;
+  border: none;
+  color: var(--primary);
+  font-size: 15px;
+}
+[data-toolbar] .searchfield::placeholder {
+  color: var(--primary-light) !important;
+}
+
+.recipe-new {
+  color: var(--primary-light);
+  background: none;
+  border: none;
+  font-size: 24px;
+  display: grid;
+  justify-items: center;
   align-items: center;
-  background-color: hsl(var(--tag-hue), 20%, 35%);
-  border: 1px solid hsl(var(--tag-hue), 20%, 70%);
-  color: hsl(var(--tag-hue), 20%, 70%);
-  border-radius: 9999px; /* make sure its fully rounded */
-  padding: 2px 4px;
+  padding: 0;
+}
+
+.searchfield {
+  background: none;
+  border: none;
+  border-bottom: 2px solid var(--border);
+  font-size: 20px;
+  padding: 8px;
+  outline: none;
+  color: white;
+  transition: 0.2s linear border-color;
+  width: 100%;
+}
+.searchfield::placeholder {
+  color: var(--primary-light);
+  transition: 0.2s linear color;
+}
+.searchfield:active, .searchfield:focus {
+  border-bottom-color: var(--border-accent);
+}
+.searchfield:active::placeholder, .searchfield:focus::placeholder {
+  color: var(--accent-light);
+}
+
+@media only screen and (min-width: 600px) {
+  .recipes-search[data-toolbar] {
+    display: none;
+  }
+  .recipes-search {
+    display: flex;
+  }
 }
