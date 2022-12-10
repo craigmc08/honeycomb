@@ -14,7 +14,7 @@ import { useQuery } from '@wasp/queries';
 import getUserTags from '@wasp/queries/getUserTags';
 import getUserRecipes from '@wasp/queries/getUserRecipes';
 import Footer from '../Footer';
-import OverflowMenu from '../Components/OverflowMenu';
+import { OverflowMenuProvider, OverflowMenuButton } from '../Components/OverflowMenu';
 
 const RecipesPage = (_props) => {
   const { data: tags } = useQuery(getUserTags);
@@ -24,21 +24,23 @@ const RecipesPage = (_props) => {
   const [selectedTags, setSelectedTags] = useState([]);
 
   return (
-    <div className="page recipes-page">
-      <nav>
-        <h1>Recipes</h1>
-        <Toolbar active="/recipes">
-          <RecipesSearch toolbar tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
-        </Toolbar>
-      </nav>
-      <main className="recipes-main">
-        <RecentRecipes tags={tags} recipes={recipes} />
-        <RecipesSearch tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
-        <RecipesList recipes={recipes} tags={tags} q={q} selectedTags={selectedTags} />
-        <div className="footer-space"></div>
-        <Footer />
-      </main>
-    </div>
+    <OverflowMenuProvider>
+      <div className="page recipes-page">
+        <nav>
+          <h1>Recipes</h1>
+          <Toolbar active="/recipes">
+            <RecipesSearch toolbar tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+          </Toolbar>
+        </nav>
+        <main className="recipes-main">
+          <RecentRecipes tags={tags} recipes={recipes} />
+          <RecipesSearch tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+          <RecipesList recipes={recipes} tags={tags} q={q} selectedTags={selectedTags} />
+          <div className="footer-space"></div>
+          <Footer />
+        </main>
+      </div>
+    </OverflowMenuProvider>
   );
 }
 
@@ -166,7 +168,7 @@ function Recipe(props) {
           <p>{props.recipe.description}</p>
         </div>
       </Link>
-      <OverflowMenu items={overflowOptions} className="recipe-item-overflow" />
+      <OverflowMenuButton items={overflowOptions} className="recipe-item-overflow" />
     </li>
   );
 }

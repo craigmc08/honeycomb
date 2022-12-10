@@ -10,9 +10,9 @@
 }
 
 .overflow-menu {
-  position: absolute;
-  right: -16px;
-  margin-top: 4px;
+  position: fixed;
+  right: calc(100vw - var(--om-x) - 16px);
+  top: calc(var(--om-y) + 8px);
   z-index: 2;
 
   display: flex;
@@ -30,7 +30,7 @@
   content: '';
   display: block;
   position: absolute;
-  right: 14.5px;
+  right: 8px;
   top: -6px;
   width: 16px;
   height: 8px;
