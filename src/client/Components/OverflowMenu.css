@@ -37,7 +37,7 @@
   background-color: var(--contrast-dark);
   clip-path: polygon(0 100%, 50% 0%, 100% 100%);
 }
-.overflow-menu[data-open=true] {
+.overflow-menu[aria-hidden=false] {
   opacity: 100%;
 }
 
@@ -76,7 +76,7 @@
     transition: transform 0.1s ease-in-out, opacity 0.1s linear;
   }
 
-  .overflow-menu[data-open=true] {
+  .overflow-menu[aria-hidden=false] {
     transform: scale(1, 1);
   }
 }

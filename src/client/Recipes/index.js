@@ -15,6 +15,7 @@ import getUserTags from '@wasp/queries/getUserTags';
 import getUserRecipes from '@wasp/queries/getUserRecipes';
 import Footer from '../Footer';
 import { OverflowMenuProvider, OverflowMenuButton } from '../Components/OverflowMenu';
+import { ModalProvider, useModal } from '../Components/Modal';
 
 const RecipesPage = (_props) => {
   const { data: tags } = useQuery(getUserTags);
@@ -24,23 +25,25 @@ const RecipesPage = (_props) => {
   const [selectedTags, setSelectedTags] = useState([]);
 
   return (
-    <OverflowMenuProvider>
-      <div className="page recipes-page">
-        <nav>
-          <h1>Recipes</h1>
-          <Toolbar active="/recipes">
-            <RecipesSearch toolbar tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
-          </Toolbar>
-        </nav>
-        <main className="recipes-main">
-          <RecentRecipes tags={tags} recipes={recipes} />
-          <RecipesSearch tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
-          <RecipesList recipes={recipes} tags={tags} q={q} selectedTags={selectedTags} />
-          <div className="footer-space"></div>
-          <Footer />
-        </main>
-      </div>
-    </OverflowMenuProvider>
+    <ModalProvider>
+      <OverflowMenuProvider>
+        <div className="page recipes-page">
+          <nav>
+            <h1>Recipes</h1>
+            <Toolbar active="/recipes">
+              <RecipesSearch toolbar tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+            </Toolbar>
+          </nav>
+          <main className="recipes-main">
+            <RecentRecipes tags={tags} recipes={recipes} />
+            <RecipesSearch tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+            <RecipesList recipes={recipes} tags={tags} q={q} selectedTags={selectedTags} />
+            <div className="footer-space"></div>
+            <Footer />
+          </main>
+        </div>
+      </OverflowMenuProvider>
+    </ModalProvider>
   );
 }
 
@@ -147,7 +150,20 @@ function RecipesList(props) {
 }
 
 function Recipe(props) {
-  const deleteRecipe = () => { };
+  const actuallyDeleteRecipe = () => {
+    console.log(`deleting recipe ${props.recipe.slug}`);
+  }
+  const deleteModal = useModal((closeModal) => ({
+    title: 'Delete Recipe?',
+    body: (<p>Once you delete a recipe, it's gone forever. There is no undo.</p>),
+    actions: [
+      <button className="modal-action warn" onClick={() => { closeModal(); actuallyDeleteRecipe(); }}>Delete</button>,
+      <button className="modal-action" onClick={closeModal}>Cancel</button>
+    ],
+  }));
+  const deleteRecipe = () => {
+    deleteModal.open();
+  };
 
   const overflowOptions = [
     { name: 'Edit', target: { type: 'link', to: `/recipe/edit?slug=${props.recipe.slug}` }, icon: faPencil },

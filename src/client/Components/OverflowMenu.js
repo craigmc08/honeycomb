@@ -1,11 +1,12 @@
 import React, { useState, createContext, useContext } from 'react';
 import { Link } from 'react-router-dom';
-
 import PropTypes from 'prop-types';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 
 import './OverflowMenu.css';
+import { useDocumentListener } from '../documentListener';
 
 const OverflowMenuContext = createContext({});
 
@@ -14,7 +15,7 @@ const useOverflowMenu = () => useContext(OverflowMenuContext);
 function OverflowMenuProvider(props) {
   const [state, setState] = useState({ open: false, holder: null, positionedOver: null, items: [] });
 
-  document.addEventListener('click', () => {
+  useDocumentListener('click', () => {
     if (state.open) {
       setState({ ...state, open: false });
     }
@@ -39,7 +40,7 @@ function OverflowMenu(props) {
   }
 
   return (
-    <ul className="overflow-menu" data-open={open} aria-hidden={!open} style={{ '--om-x': x, '--om-y': y }}>
+    <ul className="overflow-menu" aria-hidden={!open} style={{ '--om-x': x, '--om-y': y }}>
       {items.map((item, i) => (<Item {...item} key={i} />))}
     </ul>
   )
