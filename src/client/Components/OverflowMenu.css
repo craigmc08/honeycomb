@@ -1,0 +1,82 @@
+.overflow-menu-group {
+  position: relative;
+}
+
+.overflow-menu-btn {
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+}
+
+.overflow-menu {
+  position: absolute;
+  right: -16px;
+  margin-top: 4px;
+  z-index: 2;
+
+  display: flex;
+
+  background-color: var(--contrast-dark);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 0;
+  opacity: 0;
+
+  flex-direction: column;
+}
+.overflow-menu::after {
+  z-index: 3;
+  content: '';
+  display: block;
+  position: absolute;
+  right: 14.5px;
+  top: -6px;
+  width: 16px;
+  height: 8px;
+  background-color: var(--contrast-dark);
+  clip-path: polygon(0 100%, 50% 0%, 100% 100%);
+}
+.overflow-menu[data-open=true] {
+  opacity: 100%;
+}
+
+.overflow-menu-item {
+  width: 100%;
+}
+.overflow-menu-item:hover {
+  background-color: var(--border);
+}
+
+.overflow-menu-item > * {
+  color: var(--primary);
+  font-size: 18px;
+  width: 100%;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.overflow-menu-item > * > :first-child {
+  font-size: 16px;
+  width: 24px;
+}
+.overflow-menu-item a {
+  text-decoration: none;
+}
+.overflow-menu-item button {
+  background: none;
+  border: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .overflow-menu {
+    transform-origin: 100% 0;
+    transform: scale(0, 0);
+    transition: transform 0.1s ease-in-out, opacity 0.1s linear;
+  }
+
+  .overflow-menu[data-open=true] {
+    transform: scale(1, 1);
+  }
+}

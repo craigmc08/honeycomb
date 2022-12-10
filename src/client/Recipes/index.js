@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faPlus, faX, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 
 import '../reset.css';
 import '../main.css';
@@ -13,6 +14,7 @@ import { useQuery } from '@wasp/queries';
 import getUserTags from '@wasp/queries/getUserTags';
 import getUserRecipes from '@wasp/queries/getUserRecipes';
 import Footer from '../Footer';
+import OverflowMenu from '../Components/OverflowMenu';
 
 const RecipesPage = (_props) => {
   const { data: tags } = useQuery(getUserTags);
@@ -143,9 +145,16 @@ function RecipesList(props) {
 }
 
 function Recipe(props) {
+  const deleteRecipe = () => { };
+
+  const overflowOptions = [
+    { name: 'Edit', target: { type: 'link', to: `/recipe/edit?slug=${props.recipe.slug}` }, icon: faPencil },
+    { name: 'Delete', target: { type: 'button', onClick: deleteRecipe }, icon: faTrashCan },
+  ];
+
   return (
-    <li>
-      <Link className="recipe-item" to={`/recipe/${props.recipe.slug}`}>
+    <li className="recipe-item">
+      <Link className="recipe-item-link" to={`/recipe/${props.recipe.slug}`}>
         <div className="recipe-thumbnail">
           <img src={props.recipe.imageURI} alt="" />
         </div>
@@ -156,10 +165,8 @@ function Recipe(props) {
           </ul>
           <p>{props.recipe.description}</p>
         </div>
-        <button className="recipe-overflow-btn">
-          <FontAwesomeIcon icon={faEllipsisV} />
-        </button>
       </Link>
+      <OverflowMenu items={overflowOptions} className="recipe-item-overflow" />
     </li>
   );
 }
