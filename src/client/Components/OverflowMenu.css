@@ -22,6 +22,7 @@
   border-radius: 4px;
   padding: 2px 0;
   opacity: 0;
+  pointer-events: none;
 
   flex-direction: column;
 }
@@ -39,6 +40,7 @@
 }
 .overflow-menu[aria-hidden=false] {
   opacity: 100%;
+  pointer-events: all;
 }
 
 .overflow-menu-item {
