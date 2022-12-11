@@ -1,0 +1,11 @@
+.recipe-tag {
+  --tag-primary: hsl(var(--tag-hue), 100%, 85%);
+  --tag-bg: hsl(var(--tag-hue), 20%, 35%);
+  background-color: var(--tag-bg);
+  border: solid 2px var(--tag-primary);
+  color: var(--tag-primary);
+  border-radius: 1000px;
+  padding: 2px 6px;
+  width: fit-content;
+  font-size: 12px;
+}

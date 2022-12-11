@@ -1,0 +1,125 @@
+/*======================================
+HEADER/HERO
+======================================*/
+
+.recipe-header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.recipe-hero {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+.recipe-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.recipe-hero::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(var(--contrast), rgba(0,0,0,0), var(--contrast));
+  opacity: 0.7;
+}
+
+.recipe-buttons {
+  height: 200px;
+}
+.recipe-buttons-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: min-content;
+  padding: 16px;
+}
+.recipe-buttons-flex > * {
+  font-size: 32px;
+  color: var(--primary);
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recipe-header h1 {
+  padding-bottom: 16px;
+}
+
+
+
+
+
+/*======================================
+RECIPE LAYOUT
+======================================*/
+
+.recipe-main {
+  padding: 16px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.recipe-main h2 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.recipe-description {
+  font-size: 15px;
+  line-height: 1.2em;
+  color: var(--primary-light);
+}
+
+.recipe-stats {
+  font-size: 15px;
+  color: var(--primary-light);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.recipe-stat {
+  display: flex;
+  gap: 8px;
+}
+.recipe-stat .stat-name {
+  font-weight: bold;
+}
+
+.recipe-tags {
+  display: grid;
+  grid-auto-columns: min-content;
+  grid-auto-flow: column dense;
+  gap: 8px;
+}
+
+.recipe-ingredients {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.recipe-ingredients ul {
+  font-size: 18px;
+  list-style-type: disc;
+  list-style-position: inside;
+  line-height: 1.2em;
+}
+
+.recipe-instructions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 18px;
+  line-height: 1.2em;
+}

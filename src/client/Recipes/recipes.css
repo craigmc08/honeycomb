@@ -3,10 +3,14 @@ PAGE LAYOUT
 ======================================*/
 
 .page {
-  padding: 200px 0 0 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.recipes-page {
+  padding: 200px 0 0 0;
 }
 
 .page h1 {
@@ -167,18 +171,6 @@ RECIPE CARDS
 .recipe-item-tags {
   display: flex;
   gap: 4px;
-}
-
-.recipe-tag {
-  --tag-primary: hsl(var(--tag-hue), 100%, 85%);
-  --tag-bg: hsl(var(--tag-hue), 20%, 35%);
-  background-color: var(--tag-bg);
-  border: solid 2px var(--tag-primary);
-  color: var(--tag-primary);
-  border-radius: 1000px;
-  padding: 2px 6px;
-  width: fit-content;
-  font-size: 12px;
 }
 
 .recipe-item-overflow {

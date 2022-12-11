@@ -41,6 +41,11 @@ page Recipes {
   component: import Recipes from "@client/Recipes"
 }
 
+route RecipeRoute { path: "/recipe/:slug", to: RecipePage }
+page RecipePage {
+  component: import Recipe from "@client/Recipe"
+}
+
 // requires auth
 // args: { tagSlugs?: [String], q?: String }
 // returns: [{ slug: String, title: String, description: String, imageURI?: String, tagSlugs: String }]

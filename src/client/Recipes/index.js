@@ -16,6 +16,7 @@ import getUserRecipes from '@wasp/queries/getUserRecipes';
 import Footer from '../Footer';
 import { OverflowMenuProvider, OverflowMenuButton } from '../Components/OverflowMenu';
 import { ModalProvider, useModal } from '../Components/Modal';
+import Tag from '../Components/Tag';
 
 const RecipesPage = (_props) => {
   const { data: tags } = useQuery(getUserTags);
@@ -186,13 +187,6 @@ function Recipe(props) {
       </Link>
       <OverflowMenuButton items={overflowOptions} className="recipe-item-overflow" />
     </li>
-  );
-}
-
-function Tag(props) {
-  const tag = props.tags.find(t => t.slug === props.slug);
-  return (
-    <div className="recipe-tag" style={{ '--tag-hue': tag.color }}>{tag.tag}</div>
   );
 }
 

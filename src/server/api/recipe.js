@@ -62,10 +62,8 @@ export async function getUserTags(_args, context) {
 
 export async function getUserRecipe(args, context) {
   if (!context.user) { throw new HttpError(401); }
-
-  return context.entities.User.findUnique({
+  const recipe = await context.entities.Recipe.findUnique({
     where: {
-      owner: { id: context.user.id },
       slug: args.slug,
     },
     include: {
@@ -77,4 +75,13 @@ export async function getUserRecipe(args, context) {
       },
     },
   });
+
+  if (recipe.ownerId != context.user.id) {
+    throw new HttpError(404);
+  }
+
+  recipe.tagSlugs = recipe.tags.map(t => t.slug);
+  delete recipe.tags;
+
+  return recipe;
 }
