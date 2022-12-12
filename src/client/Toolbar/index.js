@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faFolder } from '@fortawesome/free-regular-svg-icons';
@@ -13,15 +14,24 @@ const Toolbar = (props) => {
     { name: 'Account', to: '/account', icon: <FontAwesomeIcon icon={faUser} /> }
   ];
 
+  const title = typeof props.title === 'string' ? <h1>{props.title}</h1> : props.title;
+
   return (
-    <div className="toolbar">
-      <ul className="nav">
-        {pages.map(page => <NavItem {...page} active={props.active} key={page.to} />)}
-      </ul>
-      {props.children}
-    </div>
-  )
+    <nav>
+      {title}
+      <div className="toolbar">
+        <ul className="nav">
+          {pages.map(page => <NavItem {...page} active={props.active} key={page.to} />)}
+        </ul>
+        {props.children}
+      </div>
+    </nav>
+  );
 }
+
+Toolbar.propTypes = {
+  title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
+};
 
 function NavItem(props) {
   return (

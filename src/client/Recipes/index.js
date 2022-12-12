@@ -17,6 +17,7 @@ import Footer from '../Footer';
 import { OverflowMenuProvider, OverflowMenuButton } from '../Components/OverflowMenu';
 import { ModalProvider, useModal } from '../Components/Modal';
 import Tag from '../Components/Tag';
+import Page from '../Page';
 
 const RecipesPage = (_props) => {
   const { data: tags } = useQuery(getUserTags);
@@ -28,21 +29,19 @@ const RecipesPage = (_props) => {
   return (
     <ModalProvider>
       <OverflowMenuProvider>
-        <div className="page recipes-page">
-          <nav>
-            <h1>Recipes</h1>
-            <Toolbar active="/recipes">
-              <RecipesSearch toolbar tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
-            </Toolbar>
-          </nav>
-          <main className="recipes-main">
-            <RecentRecipes tags={tags} recipes={recipes} />
-            <RecipesSearch tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
-            <RecipesList recipes={recipes} tags={tags} q={q} selectedTags={selectedTags} />
-            <div className="footer-space"></div>
-            <Footer />
-          </main>
-        </div>
+        <Page
+          className="recipes-page"
+          toolbar={<RecipesSearch toolbar tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />}
+          active={"/recipes"}
+          title={"Recipes"}
+        >
+          <h1>Recipes</h1>
+          <RecentRecipes tags={tags} recipes={recipes} />
+          <RecipesSearch tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+          <RecipesList recipes={recipes} tags={tags} q={q} selectedTags={selectedTags} />
+          <div className="footer-space"></div>
+          <Footer />
+        </Page>
       </OverflowMenuProvider>
     </ModalProvider>
   );

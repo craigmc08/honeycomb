@@ -2,27 +2,17 @@
 PAGE LAYOUT
 ======================================*/
 
-.page {
-  padding: 0;
+.recipes-page {
+  padding: 200px 0 0 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.recipes-page {
-  padding: 200px 0 0 0;
-}
-
-.page h1 {
+.recipes-page h1 {
   padding: 0 32px;
   font-size: 36px;
   font-weight: bold;
-}
-
-.recipes-main {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 }
 
 .footer {
@@ -31,10 +21,11 @@ PAGE LAYOUT
 }
 
 @media only screen and (min-width: 600px) {
-  .page {
-    padding: 32px 64px;
-    gap: 16px;
-    min-height: 100vh;
+  .recipes-page {
+    padding: 0;
+  }
+  .recipes-page h1 {
+    display: none;
   }
 
   nav {
@@ -44,20 +35,8 @@ PAGE LAYOUT
     border-bottom: solid 2px var(--border);
   }
 
-  .page h1 {
-    padding: 0;
-  }
-
   .recipes-main {
     flex-grow: 1;
-  }
-
-  .footer-space {
-    flex-grow: 1;
-  }
-
-  .footer {
-    margin: 0;
   }
 }
 

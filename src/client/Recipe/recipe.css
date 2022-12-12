@@ -54,7 +54,22 @@ HEADER/HERO
 }
 
 .recipe-header h1 {
-  padding-bottom: 16px;
+  padding: 0 32px 16px 32px;
+  font-size: 36px;
+}
+.recipe-page-title {
+  display: flex;
+  gap: 16px;
+}
+.recipe-page-title a {
+  color: var(--primary);
+  font-size: 32px;
+}
+
+@media only screen and (min-width: 600px) {
+  .recipe-header {
+    display: none;
+  }
 }
 
 
@@ -74,6 +89,20 @@ RECIPE LAYOUT
 .recipe-main h2 {
   font-size: 18px;
   font-weight: bold;
+}
+
+.recipe-intro {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+.recipe-intro > img {
+  display: none;
+}
+.recipe-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .recipe-description {
@@ -122,4 +151,40 @@ RECIPE LAYOUT
   gap: 8px;
   font-size: 18px;
   line-height: 1.2em;
+}
+
+@media only screen and (min-width: 600px) {
+  .recipe-main {
+    width: 60%;
+    min-width: 600px;
+    margin: 0 auto;
+  }
+
+  .recipe-main h2 {
+    font-size: 20px;
+  }
+
+  .recipe-intro {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .recipe-intro img {
+    display: block;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    flex-grow: 1;
+  }
+
+  .recipe-description, .recipe-stats {
+    font-size: 20px;
+  }
+
+  .recipe-ingredients ul {
+    font-size: 20px;
+  }
+
+  .recipe-instructions {
+    font-size: 20px;
+  }
 }
