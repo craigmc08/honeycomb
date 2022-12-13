@@ -56,48 +56,48 @@ page RecipeEdit {
 // requires auth
 // args: { tagSlugs?: [String], q?: String }
 // returns: [{ slug: String, title: String, description: String, imageURI?: String, tagSlugs: String }]
-query getUserRecipes {
-  fn: import { getUserRecipes } from "@server/api/recipe.js",
+query getRecipes {
+  fn: import { getRecipes } from "@server/api/recipe.js",
   entities: [Recipe]
 }
 
 // requires auth
 // args: none
 // returns: [{ slug: String, tag: String, color: String }]
-query getUserTags {
-  fn: import { getUserTags } from "@server/api/recipe.js",
+query getTags {
+  fn: import { getTags } from "@server/api/recipe.js",
   entities: [RecipeTag]
 }
 
 // requires auth
 // args: { slug: String }
 // returns: Recipe (tagSlugs, ingredients list with id and text)
-query getUserRecipe {
-  fn: import { getUserRecipe } from "@server/api/recipe.js",
+query getRecipe {
+  fn: import { getRecipe } from "@server/api/recipe.js",
   entities: [Recipe]
 }
 
 // requires auth (user must own this recipe)
 // args: { slug: String }
 // returns: nothing
-action deleteUserRecipe {
-  fn: import { deleteUserRecipe } from "@server/api/recipe.js",
+action deleteRecipe {
+  fn: import { deleteRecipe } from "@server/api/recipe.js",
   entities: [Recipe, Ingredient]
 }
 
 // requires auth (user must own this recipe)
 // args: Recipe (tagSlugs, ingredients list with id and text)
 // returns: nothing
-action updateUserRecipe {
-  fn: import { updateUserRecipe } from "@server/api/recipe.js",
+action updateRecipe {
+  fn: import { updateRecipe } from "@server/api/recipe.js",
   entities: [Recipe, Ingredient]
 }
 
 // requires auth
 // args: Recipe (without recipe slug) (tagSlugs, ingredients list with id and text)
 // returns: slug of newly created recipe
-action createUserRecipe {
-  fn: import { createUserRecipe } from "@server/api/recipe.js",
+action createRecipe {
+  fn: import { createRecipe } from "@server/api/recipe.js",
   entities: [Recipe, Ingredient]
 }
 

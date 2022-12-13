@@ -8,13 +8,13 @@ import { faArrowLeft, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
 import { faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
 
 import { useQuery } from '@wasp/queries';
-import getUserRecipe from '@wasp/queries/getUserRecipe';
+import getRecipe from '@wasp/queries/getRecipe';
+import getTags from '@wasp/queries/getTags';
 
 import './recipeedit.css';
 import '../Recipe/recipe.css';
 import Footer from '../Footer';
 import Page from '../Page';
-import getUserTags from '@wasp/queries/getUserTags';
 import { OverflowMenuProvider, OverflowMenuButton, useOverflowMenu } from '../Components/OverflowMenu';
 
 function RecipeEdit(props) {
@@ -27,7 +27,7 @@ function RecipeEdit(props) {
 }
 
 function RecipeEditorFromExisting({ slug }) {
-  const { data: recipe } = useQuery(getUserRecipe, { slug });
+  const { data: recipe } = useQuery(getRecipe, { slug });
 
   if (!recipe) {
     return <h1>Loading editor...</h1>;
@@ -162,7 +162,7 @@ RecipeEditor.propTypes = {
 };
 
 function TagsEditor(props) {
-  const { data: tags } = useQuery(getUserTags);
+  const { data: tags } = useQuery(getTags);
   const tagSlugs = props.tagSlugs;
 
   const remove = (idx) => {

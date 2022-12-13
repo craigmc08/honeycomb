@@ -5,11 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import { useQuery } from '@wasp/queries';
-import getUserRecipe from '@wasp/queries/getUserRecipe';
-import getUserTags from '@wasp/queries/getUserTags';
+import getRecipe from '@wasp/queries/getRecipe';
+import getTags from '@wasp/queries/getTags';
 
 import './recipe.css';
-import Toolbar from '../Toolbar';
 import Footer from '../Footer';
 import Tag from '../Components/Tag';
 import Page from '../Page';
@@ -18,8 +17,8 @@ function Recipe(props) {
   const slug = props.match.params.slug;
 
   const history = useHistory();
-  const { data: recipe } = useQuery(getUserRecipe, { slug });
-  const { data: tags } = useQuery(getUserTags);
+  const { data: recipe } = useQuery(getRecipe, { slug });
+  const { data: tags } = useQuery(getTags);
 
   const pageTitle =
     !recipe

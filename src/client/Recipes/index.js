@@ -2,17 +2,16 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus, faX, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faX, faPencil } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 
 import '../reset.css';
 import '../main.css';
 import './recipes.css';
-import Toolbar from '../Toolbar';
 
 import { useQuery } from '@wasp/queries';
-import getUserTags from '@wasp/queries/getUserTags';
-import getUserRecipes from '@wasp/queries/getUserRecipes';
+import getTags from '@wasp/queries/getTags';
+import getRecipes from '@wasp/queries/getRecipes';
 import Footer from '../Footer';
 import { OverflowMenuProvider, OverflowMenuButton } from '../Components/OverflowMenu';
 import { ModalProvider, useModal } from '../Components/Modal';
@@ -20,8 +19,8 @@ import Tag from '../Components/Tag';
 import Page from '../Page';
 
 const RecipesPage = (_props) => {
-  const { data: tags } = useQuery(getUserTags);
-  const { data: recipes } = useQuery(getUserRecipes);
+  const { data: tags } = useQuery(getTags);
+  const { data: recipes } = useQuery(getRecipes);
 
   const [q, setq] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);

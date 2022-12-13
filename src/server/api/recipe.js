@@ -1,14 +1,10 @@
-import * as yup from 'yup';
-
 import HttpError from '@wasp/core/HttpError.js'
 
-const getUserRecipesSchema = yup.object().shape({
-  q: yup.string(),
-  tagSlugs: yup.array(yup.string()),
-});
-export async function getUserRecipes(args, context) {
+import * as schema from './recipe.schema.js';
+
+export async function getRecipes(args, context) {
   if (!context.user) { throw new HttpError(401); }
-  if (!getUserRecipesSchema.isValidSync(args)) {
+  if (!schema.getRecipes.isValidSync(args)) {
     throw new HttpError(400);
   }
 
@@ -54,7 +50,7 @@ export async function getUserRecipes(args, context) {
   }));
 }
 
-export async function getUserTags(_args, context) {
+export async function getTags(_args, context) {
   if (!context.user) { throw new HttpError(401); }
 
   return context.entities.RecipeTag.findMany({
@@ -69,12 +65,9 @@ export async function getUserTags(_args, context) {
   });
 }
 
-const getUserRecipeSchema = yup.object().shape({
-  slug: yup.string().required(),
-});
-export async function getUserRecipe(args, context) {
+export async function getRecipe(args, context) {
   if (!context.user) { throw new HttpError(401); }
-  if (!getUserRecipeSchema.validateSync(args)) {
+  if (!schema.getRecipe.validateSync(args)) {
     throw new HttpError(400);
   }
   const recipe = await context.entities.Recipe.findUnique({
@@ -106,22 +99,10 @@ export async function getUserRecipe(args, context) {
   return recipe;
 }
 
-const createUserRecipeSchema = yup.object().shape({
-  title: yup.string().required(),
-  description: yup.string().required(),
-  time: yup.string().required(),
-  servings: yup.string().required(),
-  imageURI: yup.string(),
-  tagSlugs: yup.array(yup.string()).required(),
-  ingredients: yup.array(yup.object().shape({
-    text: yup.string().required(),
-  })).required(),
-  instructions: yup.string().required(),
-});
-export async function createUserRecipe(args, context) {
+export async function createRecipe(args, context) {
   if (!context.user) { throw new HttpError(401); }
 
-  if (!createUserRecipeSchema.isValidSync(args)) {
+  if (!schema.createRecipe.isValidSync(args)) {
     throw new HttpError(400);
   }
 
@@ -150,14 +131,14 @@ export async function createUserRecipe(args, context) {
   });
 }
 
-export function deleteUserRecipe(args, context) {
+export function deleteRecipe(args, context) {
   if (!context.user) { throw new HttpError(401); }
 
   // TODO: check to make sure context.user is owner of the given recipe
   // (if no ownership or it doesn't exist, respond with BAD REQUEST)  
 }
 
-export function updateUserRecipe(args, context) {
+export function updateRecipe(args, context) {
   if (!context.user) { throw new HttpError(401); }
 
   // TODO: check in DB if context.user is owner of the given recipe
