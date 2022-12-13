@@ -154,7 +154,7 @@ RECIPE LAYOUT
   line-height: 1.2em;
 }
 
-.recipe-instructions {
+.recipe-instructions, .recipe-instructions .richtext {
   display: flex;
   flex-direction: column;
   gap: 8px;

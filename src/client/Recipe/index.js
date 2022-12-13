@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faPencil } from '@fortawesome/free-solid-svg-icons';
@@ -67,7 +68,7 @@ function Recipe(props) {
         </div>
         <div className="recipe-instructions">
           <h2>Instructions</h2>
-          {recipe && recipe.instructions.split('\\n').map((para, i) => (<p key={i}>{para}</p>))}
+          <RichText content={recipe ? recipe.instructions : ''} />
         </div>
       </main>
       <div className="footer-space"></div>
@@ -75,5 +76,20 @@ function Recipe(props) {
     </Page>
   )
 }
+
+function RichText(props) {
+  // Implement actual rich text rendering (probably markdown based) with support for
+  // some formatting.
+  return (
+    <div className={`richtext ${props.className || ''}`}>
+      {props.content.split('\n').map((para, i) => (<p key={i}>{para}</p>))}
+    </div>
+  )
+}
+
+RichText.propTypes = {
+  content: PropTypes.string.isRequired,
+  className: PropTypes.string
+};
 
 export default Recipe;
