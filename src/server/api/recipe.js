@@ -67,7 +67,12 @@ export async function getUserRecipe(args, context) {
       slug: args.slug,
     },
     include: {
-      ingredients: true,
+      ingredients: {
+        select: {
+          id: true,
+          text: true,
+        },
+      },
       tags: {
         select: {
           slug: true,
@@ -76,7 +81,7 @@ export async function getUserRecipe(args, context) {
     },
   });
 
-  if (recipe.ownerId != context.user.id) {
+  if (recipe === null || recipe.ownerId !== context.user.id) {
     throw new HttpError(404);
   }
 
@@ -85,3 +90,23 @@ export async function getUserRecipe(args, context) {
 
   return recipe;
 }
+
+export function deleteUserRecipe(args, context) {
+  if (!context.user) { throw new HttpError(401); }
+
+  // TODO: check to make sure context.user is owner of the given recipe
+  // (if no ownership or it doesn't exist, respond with BAD REQUEST)  
+}
+
+export function updateUserRecipe(args, context) {
+  if (!context.user) { throw new HttpError(401); }
+
+  // TODO: check in DB if context.user is owner of the given recipe
+  // TODO: check to make sure user owns all of the given tags
+  // (if no ownership or any of these are missing, respond with BAD REQUEST)
+
+  // TODO: update data in recipe entity
+
+  // TODO: figure out ingredients list change set and update it
+  // (and insert new ingredient rows when needed)
+} 

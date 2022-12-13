@@ -73,7 +73,7 @@ function RecentRecipes(props) {
             <ul className="recent-list">
               {coloredRecentRecipes.map(({ slug, imageURI, color }) => (
                 <li key={slug}>
-                  <Link className="recent-item" to={`/recipe/${slug}`} style={{ '--tag-hue': color }}>
+                  <Link className="recent-item" to={`/recipe/view/${slug}`} style={{ '--tag-hue': color }}>
                     <img src={imageURI} />
                   </Link>
                 </li>
@@ -172,7 +172,7 @@ function Recipe(props) {
 
   return (
     <li className="recipe-item">
-      <Link className="recipe-item-link" to={`/recipe/${props.recipe.slug}`}>
+      <Link className="recipe-item-link" to={`/recipe/view/${props.recipe.slug}`}>
         <div className="recipe-thumbnail">
           <img src={props.recipe.imageURI} alt="" />
         </div>

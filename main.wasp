@@ -16,7 +16,8 @@ app honeycomb {
     ("@fortawesome/react-fontawesome", "0.2.0"),
     ("@fortawesome/free-solid-svg-icons", "6.2.1"),
     ("@fortawesome/free-regular-svg-icons", "6.2.1"),
-    ("prop-types", "15.8.1")
+    ("prop-types", "15.8.1"),
+    ("uuid", "^9.0.0")
   ]
 }
 
@@ -41,9 +42,14 @@ page Recipes {
   component: import Recipes from "@client/Recipes"
 }
 
-route RecipeRoute { path: "/recipe/:slug", to: RecipePage }
+route RecipeRoute { path: "/recipe/view/:slug", to: RecipePage }
 page RecipePage {
   component: import Recipe from "@client/Recipe"
+}
+
+route RecipeEditRoute { path: "/recipe/edit", to: RecipeEdit }
+page RecipeEdit {
+  component: import RecipeEdit from "@client/RecipeEdit"
 }
 
 // requires auth
@@ -64,10 +70,26 @@ query getUserTags {
 
 // requires auth
 // args: { slug: String }
-// returns: [Recipe] (tagSlugs, ingredients list embedded)
+// returns: Recipe (tagSlugs, ingredients list with id and text)
 query getUserRecipe {
   fn: import { getUserRecipe } from "@server/api/recipe.js",
   entities: [Recipe]
+}
+
+// requires auth (user must own this recipe)
+// args: { slug: String }
+// returns: nothing
+action deleteUserRecipe {
+  fn: import { deleteUserRecipe } from "@server/api/recipe.js",
+  entities: [Recipe, Ingredient]
+}
+
+// requires auth (user must own this recipe)
+// args: Recipe (tagSlugs, ingredients list with id and text)
+// returns: nothing
+action updateUserRecipe {
+  fn: import { updateUserRecipe } from "@server/api/recipe.js",
+  entities: [Recipe, Ingredient]
 }
 
 entity User {=psl
