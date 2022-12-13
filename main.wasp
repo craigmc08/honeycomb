@@ -92,6 +92,14 @@ action updateUserRecipe {
   entities: [Recipe, Ingredient]
 }
 
+// requires auth
+// args: Recipe (without recipe slug) (tagSlugs, ingredients list with id and text)
+// returns: slug of newly created recipe
+action createUserRecipe {
+  fn: import { createUserRecipe } from "@server/api/recipe.js",
+  entities: [Recipe, Ingredient]
+}
+
 entity User {=psl
   id Int @id @default(autoincrement()) // Required to be Int by usernameAndPassword method
   name String

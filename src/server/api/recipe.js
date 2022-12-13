@@ -91,6 +91,15 @@ export async function getUserRecipe(args, context) {
   return recipe;
 }
 
+export function createUserRecipe(args, context) {
+  if (!context.user) { throw new HttpError(401); }
+
+  // TODO: check to make sure context.user is owner of all tagSlugs used
+  // (if not owner/not exist, respond with BAD REQUEST)
+
+  // TODO: insert recipe fields, and insert ingredients
+}
+
 export function deleteUserRecipe(args, context) {
   if (!context.user) { throw new HttpError(401); }
 

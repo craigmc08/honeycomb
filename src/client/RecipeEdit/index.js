@@ -62,8 +62,14 @@ function RecipeEditor(props) {
 
   const saveIfModified = async () => {
     if (modified) {
-      // TODO: call save endpoint
-      console.log('doing a saving');
+      if (props.slug) {
+        // TODO: call save endpoint
+        console.log(`saving to ${props.slug}`);
+      } else {
+        // TODO: call create endpoint
+        console.log(`saving new recipe`);
+        // TODO: redirect to edit page for newly created recipe (if save) succeeds
+      }
     }
     // If not modified, do nothing
   }
