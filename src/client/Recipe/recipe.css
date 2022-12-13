@@ -64,9 +64,15 @@ HEADER/HERO
   display: flex;
   gap: 16px;
 }
-.recipe-page-title a {
+.recipe-page-title a, .recipe-page-title button {
   color: var(--primary);
   font-size: 32px;
+  border: none;
+  padding: none;
+  background: none;
+}
+.recipe-page-title > [disabled] {
+  color: var(--primary-light);
 }
 
 @media only screen and (min-width: 600px) {

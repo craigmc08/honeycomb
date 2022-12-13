@@ -83,9 +83,12 @@ function RecipeEditor(props) {
   }
 
   const titleInput = (
-    <h1>
       <input type="text" value={title} onChange={e => update(e, title, setTitle)} />
-    </h1>
+  );
+  const saveButton = (
+    <button title={props.slug ? 'Save' : 'Create recipe'} onClick={() => saveIfModified()} disabled={!modified}>
+      <FontAwesomeIcon icon={faFloppyDisk} />
+    </button>
   );
   
   return (
@@ -93,7 +96,7 @@ function RecipeEditor(props) {
       className="recipe-page"
       toolbat={[]}
       active="/recipes"
-      title={titleInput}
+      title={<h1 className="recipe-page-title">{titleInput}{saveButton}</h1>}
     >
       <div className="recipe-header">
         <div className="recipe-hero">
@@ -102,12 +105,10 @@ function RecipeEditor(props) {
         <div className="recipe-buttons">
           <div className="recipe-buttons-flex">
             <button title="Back" onClick={() => history.goBack()}><FontAwesomeIcon icon={faArrowLeft} /></button>
-            <button title={props.slug ? 'Save' : 'Create recipe'} onClick={() => saveIfModified()} disabled={!modified}>
-              <FontAwesomeIcon icon={faFloppyDisk} />
-            </button>
+            {saveButton}
           </div>
         </div>
-        {titleInput}
+        <h1>{titleInput}</h1>
       </div>
       <main className="recipe-main">
         <div className="recipe-intro">
