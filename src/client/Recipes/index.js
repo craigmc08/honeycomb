@@ -129,11 +129,11 @@ function RecipesSearch(props) {
       <div className="recipes-search-flow">
         <div className="searchfield-container">
           <input className="searchfield" type="text" value={props.q} onChange={e => props.setq(e.target.value)} placeholder="Search your recipes" />
-          <button className="searchfield-clear" data-show={props.q !== ''} onClick={() => props.setq('')}>
+          <button title="Clear searchbar" className="searchfield-clear" data-show={props.q !== ''} onClick={() => props.setq('')}>
             <FontAwesomeIcon icon={faX} />
           </button>
         </div>
-        <button className="recipe-new"><FontAwesomeIcon icon={faPlus} /></button>
+        <Link title="Create recipe" to="/recipe/edit" className="recipe-new"><FontAwesomeIcon icon={faPlus} /></Link>
       </div>
     </div>
   );

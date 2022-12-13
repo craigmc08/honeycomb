@@ -101,8 +101,10 @@ function RecipeEditor(props) {
         </div>
         <div className="recipe-buttons">
           <div className="recipe-buttons-flex">
-            <button onClick={() => history.goBack()}><FontAwesomeIcon icon={faArrowLeft} /></button>
-            <button onClick={() => saveIfModified()} disabled={!modified}><FontAwesomeIcon icon={faFloppyDisk} /></button>
+            <button title="Back" onClick={() => history.goBack()}><FontAwesomeIcon icon={faArrowLeft} /></button>
+            <button title={props.slug ? 'Save' : 'Create recipe'} onClick={() => saveIfModified()} disabled={!modified}>
+              <FontAwesomeIcon icon={faFloppyDisk} />
+            </button>
           </div>
         </div>
         {titleInput}
@@ -181,12 +183,12 @@ function IngredientsEditor(props) {
     <ul className="ingredients-editor">
       {props.ingredients.map((ingredient, i) => (
         <li key={ingredient.id}>
-          <button onClick={() => remove(i)}><FontAwesomeIcon icon={faX} /></button>
+          <button title="Remove ingredient" onClick={() => remove(i)}><FontAwesomeIcon icon={faX} /></button>
           <input type="text" value={ingredient.text} onChange={e => update(e.target.value, i)} />
         </li>
       ))}
     </ul>
-    <button onClick={() => add()}><FontAwesomeIcon icon={faPlus} /></button>
+    <button title="Add ingredient" onClick={() => add()}><FontAwesomeIcon icon={faPlus} /></button>
     </div>
   )
 }

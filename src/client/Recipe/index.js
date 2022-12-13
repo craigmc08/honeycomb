@@ -40,8 +40,8 @@ function Recipe(props) {
         </div>
         <div className="recipe-buttons">
           <div className="recipe-buttons-flex">
-            <button onClick={() => history.goBack()}><FontAwesomeIcon icon={faArrowLeft} /></button>
-            <Link to={`/recipe/edit?slug=${slug}`}><FontAwesomeIcon icon={faPencil} /></Link>
+            <button title="Back" onClick={() => history.goBack()}><FontAwesomeIcon icon={faArrowLeft} /></button>
+            <Link title="Edit" to={`/recipe/edit?slug=${slug}`}><FontAwesomeIcon icon={faPencil} /></Link>
           </div>
         </div>
         <h1>{recipe ? recipe.title : 'Loading...'}</h1>
