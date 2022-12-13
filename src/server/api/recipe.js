@@ -1,12 +1,21 @@
+import * as yup from 'yup';
+
 import HttpError from '@wasp/core/HttpError.js'
 
+const getUserRecipesSchema = yup.object().shape({
+  q: yup.string(),
+  tagSlugs: yup.array(yup.string()),
+});
 export async function getUserRecipes(args, context) {
   if (!context.user) { throw new HttpError(401); }
+  if (!getUserRecipesSchema.isValidSync(args)) {
+    throw new HttpError(400);
+  }
 
   const where = {
     owner: { id: context.user.id },
   };
-  if (Array.isArray(args.tagSlugs) && args.tagSlugs.every(x => typeof x === 'string')) {
+  if (args.tagSlugs) {
     const tagIds = await context.entities.RecipeTag.findMany({
       where: {
         owner: { id: context.user.id },
@@ -16,7 +25,7 @@ export async function getUserRecipes(args, context) {
     });
     where.tags = { in: tagIds };
   }
-  if (typeof args.q === 'string') {
+  if (args.q) {
     // TODO: get Full-Text Search working https://www.prisma.io/docs/concepts/components/prisma-client/full-text-search
     where.title = { contains: args.q };
   }
@@ -60,8 +69,14 @@ export async function getUserTags(_args, context) {
   });
 }
 
+const getUserRecipeSchema = yup.object().shape({
+  slug: yup.string().required(),
+});
 export async function getUserRecipe(args, context) {
   if (!context.user) { throw new HttpError(401); }
+  if (!getUserRecipeSchema.validateSync(args)) {
+    throw new HttpError(400);
+  }
   const recipe = await context.entities.Recipe.findUnique({
     where: {
       slug: args.slug,
@@ -91,13 +106,48 @@ export async function getUserRecipe(args, context) {
   return recipe;
 }
 
-export function createUserRecipe(args, context) {
+const createUserRecipeSchema = yup.object().shape({
+  title: yup.string().required(),
+  description: yup.string().required(),
+  time: yup.string().required(),
+  servings: yup.string().required(),
+  imageURI: yup.string(),
+  tagSlugs: yup.array(yup.string()).required(),
+  ingredients: yup.array(yup.object().shape({
+    text: yup.string().required(),
+  })).required(),
+  instructions: yup.string().required(),
+});
+export async function createUserRecipe(args, context) {
   if (!context.user) { throw new HttpError(401); }
 
-  // TODO: check to make sure context.user is owner of all tagSlugs used
-  // (if not owner/not exist, respond with BAD REQUEST)
+  if (!createUserRecipeSchema.isValidSync(args)) {
+    throw new HttpError(400);
+  }
 
-  // TODO: insert recipe fields, and insert ingredients
+  if (!authenticateTags(args.tagSlugs)) {
+    throw new HttpError(400);
+  }
+
+  await context.entities.Recipe.create({
+    data: {
+      slug: slugFromTitle(args.title),
+      title: args.title,
+      description: args.description,
+      time: args.time,
+      servings: args.servings,
+      imageURI: args.imageURI,
+      instructions: args.instructions,
+      ingredients: {
+        create: args.ingredients.map(ingredient => (
+          { text: ingredient.text }
+        )),
+      },
+      tags: {
+        connect: args.tagSlugs.map(ts => ({slug: ts}))
+      },
+    },
+  });
 }
 
 export function deleteUserRecipe(args, context) {
@@ -119,3 +169,39 @@ export function updateUserRecipe(args, context) {
   // TODO: figure out ingredients list change set and update it
   // (and insert new ingredient rows when needed)
 } 
+
+/**
+ * `authenticateTags(context, userId, tagSlugs)` returns true only when:
+ *
+ * 1) All tag slugs are valid tag slugs
+ * 2) Each tag slug represents a tag owned by `userId`
+ */
+async function authenticateTags(context, userId, tagSlugs) {
+  // Will only be `tagSlugs.length` if the conditions above are met
+  const nTags = await context.entities.RecipeTag.count({
+    where: {
+      ownerId: userId,
+      in: tagSlugs,
+    },
+  });
+  if (nTags !== tagSlugs.length) {
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Generate a slug from a title:
+ * - Converts title to kebab case
+ * - Appends 10 character alphanumeric string
+ */
+function slugFromTitle(title) {
+  const alphanumeric = 'abcdefghijklmnopqrtstuvwxyzABCDEFGHIJKLMNOPQRTSTUVWXYZ0123456789';
+  const kebabCase = title.replace(/[^a-zA-Z0-9]+/, '-');
+  const randomness =
+    [...new Array(10)]
+    .map(() => alphanumeric[Math.floor(Math.random() * alphanumeric.length)])
+    .join('')
+  ;
+  return `${kebabCase}-${randomness}`;
+}
