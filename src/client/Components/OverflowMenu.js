@@ -12,6 +12,13 @@ const OverflowMenuContext = createContext({});
 
 const useOverflowMenu = () => useContext(OverflowMenuContext);
 
+const useOverflowMenu_pub = () => {
+  const [state, setState] = useContext(OverflowMenuContext);
+  return {
+    close: () => setState({...state, open: false}),
+  };
+}
+
 function OverflowMenuProvider(props) {
   const [state, setState] = useState({ open: false, holder: null, positionedOver: null, items: [] });
 
@@ -30,24 +37,31 @@ function OverflowMenuProvider(props) {
 }
 
 function OverflowMenu(props) {
-  const [{ open, positionedOver, items }] = useOverflowMenu();
+  const [{ open, positionedOver, items, content, align }] = useOverflowMenu();
 
   let x, y;
-  if (positionedOver !== null) {
+  if (positionedOver) {
     const bb = positionedOver.getBoundingClientRect();
     x = (bb.left + bb.width / 2) + 'px';
     y = bb.bottom + 'px';
   }
 
+  const unBubble = (e) => { e.stopPropagation(); };
+
   return (
-    <ul className="overflow-menu" aria-hidden={!open} style={{ '--om-x': x, '--om-y': y }}>
-      {items.map((item, i) => (<Item {...item} key={i} />))}
-    </ul>
-  )
+    <div className={`overflow-menu ${align}`} aria-hidden={!open} style={{'--om-x': x, '--om-y': y}} onClick={unBubble}>
+      {content
+        ? content
+        : (<ul className="overflow-menu-list" aria-hidden={!open}>
+            {items && items.map((item, i) => (<Item {...item} key={i} />))}
+          </ul>)
+      }
+    </div>
+  );
 }
 
 function OverflowMenuButton(props) {
-  const self = Symbol('overflow-menu');
+  const [self] = useState(Symbol('overflow-menu'));
   /**
    * Depending on the combination of `open` and `holder`, do different things
    * when `toggleOpen` is called:
@@ -57,23 +71,24 @@ function OverflowMenuButton(props) {
    * 
    * In the implementation below, (2) and (3) are combined into the else branch
    */
-  const [{ open, holder }, setState] = useOverflowMenu();
+  const [{ open, holder, positionedOver, items, content, align }, setState] = useOverflowMenu();
+  const this_align = props.align || 'right';
 
   const toggleOpen = (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (open && holder === self) {
       // Case (1)
-      setState({ open: false });
+      setState({ open: false, holder, positionedOver, items, content, align });
     } else {
       // Case (2) or (3)
-      setState({ open: true, holder: self, positionedOver: e.target, items: props.items });
+      setState({ open: true, holder: self, positionedOver: e.target, items: props.items, content: props.content, align: this_align });
     }
   }
 
   return (
-    <button className={`overflow-menu-btn ${props.className}`} onClick={e => toggleOpen(e)}>
-      <FontAwesomeIcon icon={faEllipsisV} />
+    <button className={`overflow-menu-btn ${props.className || ''}`} onClick={e => toggleOpen(e)}>
+      <FontAwesomeIcon icon={props.icon || faEllipsisV} />
     </button>
   )
 }
@@ -93,8 +108,11 @@ OverflowMenuButton.propTypes = {
     ]).isRequired,
     icon: PropTypes.any,
     disabled: PropTypes.bool,
-  })).isRequired,
+  })),
+  content: PropTypes.element,
   className: PropTypes.string,
+  icon: PropTypes.object,
+  align: PropTypes.oneOf(['left', 'right']),
 };
 
 function Item(props) {
@@ -126,5 +144,6 @@ function Item(props) {
 export {
   OverflowMenuProvider,
   OverflowMenuButton,
+  useOverflowMenu_pub as useOverflowMenu,
 };
 

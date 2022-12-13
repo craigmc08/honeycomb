@@ -15,6 +15,7 @@ import '../Recipe/recipe.css';
 import Footer from '../Footer';
 import Page from '../Page';
 import getUserTags from '@wasp/queries/getUserTags';
+import { OverflowMenuProvider, OverflowMenuButton, useOverflowMenu } from '../Components/OverflowMenu';
 
 function RecipeEdit(props) {
   const queryParams = new URLSearchParams(props.location.search);
@@ -95,54 +96,56 @@ function RecipeEditor(props) {
   );
   
   return (
-    <Page
-      className="recipe-page"
-      toolbat={[]}
-      active="/recipes"
-      title={<h1 className="recipe-page-title">{titleInput}{saveButton}</h1>}
-    >
-      <div className="recipe-header">
-        <div className="recipe-hero">
-          <img src={imageURI} />
-        </div>
-        <div className="recipe-buttons">
-          <div className="recipe-buttons-flex">
-            <button title="Back" onClick={() => history.goBack()}><FontAwesomeIcon icon={faArrowLeft} /></button>
-            {saveButton}
+    <OverflowMenuProvider>
+      <Page
+        className="recipe-page"
+        toolbat={[]}
+        active="/recipes"
+        title={<h1 className="recipe-page-title">{titleInput}{saveButton}</h1>}
+      >
+        <div className="recipe-header">
+          <div className="recipe-hero">
+            <img src={imageURI} />
           </div>
-        </div>
-        <h1>{titleInput}</h1>
-      </div>
-      <main className="recipe-main">
-        <div className="recipe-intro">
-          <div className="recipe-info">
-            <textarea value={description} onChange={e => update(e, description, setDescription)} />
-            <div className="recipe-stats">
-              <div className="recipe-stat">
-                <span className="stat-name">Time</span>
-                <input type="text" value={time} onChange={e => update(e, time, setTime)} />
-              </div>
-              <div className="recipe-stat">
-                <span className="stat-name">Servings</span>
-                <input type="text" value={servings} onChange={e => update(e, servings, setServings)} />
-              </div>
+          <div className="recipe-buttons">
+            <div className="recipe-buttons-flex">
+              <button title="Back" onClick={() => history.goBack()}><FontAwesomeIcon icon={faArrowLeft} /></button>
+              {saveButton}
             </div>
-            <TagsEditor tagSlugs={tagSlugs} setTagSlugs={setTagSlugs} update={set} />
           </div>
-          <img src={imageURI} />
+          <h1>{titleInput}</h1>
         </div>
-        <div className="recipe-ingredients">
-          <h2>Ingredients</h2>
-          <IngredientsEditor ingredients={ingredients} setIngredients={setIngredients} update={set} />
-        </div>
-        <div className="recipe-instructions">
-          <h2>Instructions</h2>
-          <textarea value={instructions} onChange={e => update(e, instructions, setInstructions)} />
-        </div>
-      </main>
-      <div className="footer-space"></div>
-      <Footer />
-    </Page>
+        <main className="recipe-main">
+          <div className="recipe-intro">
+            <div className="recipe-info">
+              <textarea value={description} onChange={e => update(e, description, setDescription)} />
+              <div className="recipe-stats">
+                <div className="recipe-stat">
+                  <span className="stat-name">Time</span>
+                  <input type="text" value={time} onChange={e => update(e, time, setTime)} />
+                </div>
+                <div className="recipe-stat">
+                  <span className="stat-name">Servings</span>
+                  <input type="text" value={servings} onChange={e => update(e, servings, setServings)} />
+                </div>
+              </div>
+              <TagsEditor tagSlugs={tagSlugs} setTagSlugs={setTagSlugs} update={set} />
+            </div>
+            <img src={imageURI} />
+          </div>
+          <div className="recipe-ingredients">
+            <h2>Ingredients</h2>
+            <IngredientsEditor ingredients={ingredients} setIngredients={setIngredients} update={set} />
+          </div>
+          <div className="recipe-instructions">
+            <h2>Instructions</h2>
+            <textarea value={instructions} onChange={e => update(e, instructions, setInstructions)} />
+          </div>
+        </main>
+        <div className="footer-space"></div>
+        <Footer />
+      </Page>
+    </OverflowMenuProvider>
   );
 }
 
@@ -160,15 +163,16 @@ RecipeEditor.propTypes = {
 
 function TagsEditor(props) {
   const { data: tags } = useQuery(getUserTags);
+  const tagSlugs = props.tagSlugs;
 
   const remove = (idx) => {
     const newTagSlugs = [...props.tagSlugs];
-    newTagSlugs.splice(idx);
+    newTagSlugs.splice(idx, 1);
     props.update(newTagSlugs, props.setTagSlugs, true);
   };
 
-  const add = (tagSlug) => {
-    const newTagSlugs = [...props.tagSlugs, tagSlug];
+  const add = (tagSlugs) => {
+    const newTagSlugs = Array.of(...new Set([...props.tagSlugs, ...tagSlugs]));
     newTagSlugs.sort();
     props.update(newTagSlugs, props.setTagSlugs, true);
   };
@@ -191,8 +195,11 @@ function TagsEditor(props) {
           );
         })}
       </ul>
-      {/* TODO: implement tag selection menu */}
-      <button title="Add tag"><FontAwesomeIcon icon={faPlus}/></button>
+      <OverflowMenuButton
+        content={<TagAddEditor tags={tags} cur={tagSlugs} add={add} />}
+        icon={faPlus}
+        align="left"
+      />
     </div>
   )
 }
@@ -202,6 +209,36 @@ TagsEditor.propTypes = {
   setTagSlugs: PropTypes.func.isRequired,
   update: PropTypes.func.isRequired,
 };
+
+function TagAddEditor(props) {
+  const [q, setq] = useState('');
+  const available = props.tags.filter(tag => {
+    if (props.cur.includes(tag.slug)) return false;
+    if (q !== '' && !tag.tag.includes(q)) return false;
+    return true;
+  });
+  const overflowMenu = useOverflowMenu();
+
+  const add = (tag) => {
+    props.add([tag.slug]);
+    overflowMenu.close();
+  };
+
+  return (
+    <div className="tag-add-editor">
+      <input autoFocus type="text" value={q} onChange={e => setq(e.target.value)} />
+      <ul className="tag-editor-list">
+        {available.map(tag => (
+         <li key={tag.slug}>
+           <button className="recipe-tag" style={{'--tag-hue': tag.color}} onClick={() => add(tag)}>
+             <FontAwesomeIcon icon={faPlus}/>{tag.tag}
+           </button>
+         </li> 
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 function IngredientsEditor(props) {
   const remove = (idx) => {
