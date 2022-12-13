@@ -106,13 +106,14 @@ export async function createRecipe(args, context) {
     throw new HttpError(400);
   }
 
-  if (!authenticateTags(args.tagSlugs)) {
+  if (!authenticateTags(context, context.user.id, args.tagSlugs)) {
     throw new HttpError(400);
   }
 
+  const slug = slugFromTitle(args.title);
   await context.entities.Recipe.create({
     data: {
-      slug: slugFromTitle(args.title),
+      slug,
       title: args.title,
       description: args.description,
       time: args.time,
@@ -127,15 +128,36 @@ export async function createRecipe(args, context) {
       tags: {
         connect: args.tagSlugs.map(ts => ({slug: ts}))
       },
+      owner: { connect: { id: context.user.id } },
     },
   });
+  return { slug };
 }
 
-export function deleteRecipe(args, context) {
+export async function deleteRecipe(args, context) {
   if (!context.user) { throw new HttpError(401); }
+  if (!schema.deleteRecipe.isValidSync(args)) {
+    throw new HttpError(400);
+  }
 
-  // TODO: check to make sure context.user is owner of the given recipe
-  // (if no ownership or it doesn't exist, respond with BAD REQUEST)  
+  // Make sure the logged in user owns the recipe
+  const recipe = await context.entities.Recipe.findUnique({
+    where: { slug: args.slug },
+    select: { ownerId: true, id: true },
+  });
+  if (!recipe || recipe.ownerId !== context.user.id) {
+    throw new HttpError(404);
+  }
+
+  // User owns the recipe, so its safe to delete it
+  await context.entities.Ingredient.deleteMany({
+    where: {
+      recipe: { id: recipe.id },
+    },
+  });
+  await context.entities.Recipe.delete({
+    where: { id: recipe.id },
+  });
 }
 
 export function updateRecipe(args, context) {
@@ -162,7 +184,9 @@ async function authenticateTags(context, userId, tagSlugs) {
   const nTags = await context.entities.RecipeTag.count({
     where: {
       ownerId: userId,
-      in: tagSlugs,
+      slug: {
+        in: tagSlugs,
+      },
     },
   });
   if (nTags !== tagSlugs.length) {
@@ -178,7 +202,7 @@ async function authenticateTags(context, userId, tagSlugs) {
  */
 function slugFromTitle(title) {
   const alphanumeric = 'abcdefghijklmnopqrtstuvwxyzABCDEFGHIJKLMNOPQRTSTUVWXYZ0123456789';
-  const kebabCase = title.replace(/[^a-zA-Z0-9]+/, '-');
+  const kebabCase = title.replace(/[^a-zA-Z0-9]+/g, '-').replace(/-$/, '').toLowerCase();
   const randomness =
     [...new Array(10)]
     .map(() => alphanumeric[Math.floor(Math.random() * alphanumeric.length)])

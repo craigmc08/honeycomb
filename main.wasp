@@ -90,15 +90,15 @@ action deleteRecipe {
 // returns: nothing
 action updateRecipe {
   fn: import { updateRecipe } from "@server/api/recipe.js",
-  entities: [Recipe, Ingredient]
+  entities: [Recipe, Ingredient, RecipeTag]
 }
 
 // requires auth
 // args: Recipe (without recipe slug) (tagSlugs, ingredients list with id and text)
-// returns: slug of newly created recipe
+// returns: { slug: String }, the slug of the new recipe
 action createRecipe {
   fn: import { createRecipe } from "@server/api/recipe.js",
-  entities: [Recipe, Ingredient]
+  entities: [Recipe, Ingredient, RecipeTag]
 }
 
 entity User {=psl

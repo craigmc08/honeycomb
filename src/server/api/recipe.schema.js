@@ -22,3 +22,7 @@ export const createRecipe = yup.object().shape({
   instructions: yup.string().required(),
 });
 
+export const deleteRecipe = yup.object().shape({
+  slug: yup.string().required(),
+});
+

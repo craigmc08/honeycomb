@@ -12,6 +12,8 @@ import './recipes.css';
 import { useQuery } from '@wasp/queries';
 import getTags from '@wasp/queries/getTags';
 import getRecipes from '@wasp/queries/getRecipes';
+import deleteRecipe from '@wasp/actions/deleteRecipe';
+
 import Footer from '../Footer';
 import { OverflowMenuProvider, OverflowMenuButton } from '../Components/OverflowMenu';
 import { ModalProvider, useModal } from '../Components/Modal';
@@ -149,8 +151,12 @@ function RecipesList(props) {
 }
 
 function Recipe(props) {
-  const actuallyDeleteRecipe = () => {
-    console.log(`deleting recipe ${props.recipe.slug}`);
+  const actuallyDeleteRecipe = async () => {
+    try {
+      await deleteRecipe({ slug: props.recipe.slug });
+    } catch (e) {
+      console.warn(`Failed to delete recipe ${props.recipe.slug}: ${e}`);
+    }
   }
   const deleteModal = useModal((closeModal) => ({
     title: 'Delete Recipe?',
@@ -160,13 +166,13 @@ function Recipe(props) {
       <button className="modal-action" onClick={closeModal}>Cancel</button>
     ],
   }));
-  const deleteRecipe = () => {
+  const beginDeleteRecipe = () => {
     deleteModal.open();
   };
 
   const overflowOptions = [
     { name: 'Edit', target: { type: 'link', to: `/recipe/edit?slug=${props.recipe.slug}` }, icon: faPencil },
-    { name: 'Delete', target: { type: 'button', onClick: deleteRecipe }, icon: faTrashCan },
+    { name: 'Delete', target: { type: 'button', onClick: beginDeleteRecipe }, icon: faTrashCan },
   ];
 
   return (

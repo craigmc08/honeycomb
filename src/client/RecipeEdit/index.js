@@ -10,6 +10,7 @@ import { faFloppyDisk } from '@fortawesome/free-regular-svg-icons';
 import { useQuery } from '@wasp/queries';
 import getRecipe from '@wasp/queries/getRecipe';
 import getTags from '@wasp/queries/getTags';
+import createRecipe from '@wasp/actions/createRecipe';
 
 import './recipeedit.css';
 import '../Recipe/recipe.css';
@@ -70,9 +71,22 @@ function RecipeEditor(props) {
         // TODO: call save endpoint
         console.log(`saving to ${props.slug}`);
       } else {
-        // TODO: call create endpoint
-        console.log(`saving new recipe`);
-        // TODO: redirect to edit page for newly created recipe (if save) succeeds
+        try {
+          const { slug } = await createRecipe({
+            title,
+            description,
+            imageURI,
+            time,
+            servings,
+            tagSlugs,
+            ingredients,
+            instructions
+          });
+          setModified(false);
+          history.push(`/recipe/view/${slug}`);
+        } catch (e) {
+          console.error(`Failed to save: ${e}`);
+        }
       }
     }
     // If not modified, do nothing
