@@ -1,3 +1,19 @@
 textarea {
   resize: vertical;
 }
+
+.tags-editor ul {
+  display: flex;
+  gap: 8px;
+}
+.tags-editor .recipe-tag {
+  display: flex;
+  align-items: center;
+}
+.tags-editor .recipe-tag button {
+  padding: none;
+  border: none;
+  background: none;
+  color: var(--tag-color);
+  font-size: 10px;
+}

@@ -14,6 +14,7 @@ import './recipeedit.css';
 import '../Recipe/recipe.css';
 import Footer from '../Footer';
 import Page from '../Page';
+import getUserTags from '@wasp/queries/getUserTags';
 
 function RecipeEdit(props) {
   const queryParams = new URLSearchParams(props.location.search);
@@ -41,6 +42,7 @@ function RecipeEditorFromNew(props) {
     imageURI: '',
     time: '',
     servings: '',
+    tagSlugs: [],
     ingredients: [],
     instructions: '',
   };
@@ -57,6 +59,7 @@ function RecipeEditor(props) {
   const [imageURI, setImageURI] = useState(props.imageURI);
   const [time, setTime] = useState(props.time);
   const [servings, setServings] = useState(props.servings);
+  const [tagSlugs, setTagSlugs] = useState(props.tagSlugs);
   const [ingredients, setIngredients] = useState(props.ingredients);
   const [instructions, setInstructions] = useState(props.instructions);
 
@@ -124,9 +127,7 @@ function RecipeEditor(props) {
                 <input type="text" value={servings} onChange={e => update(e, servings, setServings)} />
               </div>
             </div>
-            <div className="recipe-tags">
-              {null} {/* TODO: tag editor */}
-            </div>
+            <TagsEditor tagSlugs={tagSlugs} setTagSlugs={setTagSlugs} update={set} />
           </div>
           <img src={imageURI} />
         </div>
@@ -152,8 +153,54 @@ RecipeEditor.propTypes = {
   imageURI: PropTypes.string.isRequired,
   time: PropTypes.string.isRequired,
   servings: PropTypes.string.isRequired,
+  tagSlugs: PropTypes.arrayOf(PropTypes.string).isRequired,
   ingredients: PropTypes.arrayOf(PropTypes.object).isRequired,
   instructions: PropTypes.string.isRequired,
+};
+
+function TagsEditor(props) {
+  const { data: tags } = useQuery(getUserTags);
+
+  const remove = (idx) => {
+    const newTagSlugs = [...props.tagSlugs];
+    newTagSlugs.splice(idx);
+    props.update(newTagSlugs, props.setTagSlugs, true);
+  };
+
+  const add = (tagSlug) => {
+    const newTagSlugs = [...props.tagSlugs, tagSlug];
+    newTagSlugs.sort();
+    props.update(newTagSlugs, props.setTagSlugs, true);
+  };
+
+  if (!tags) {
+    return (<div className="tags-editor"></div>);
+  }
+  return (
+    <div className="tags-editor">
+      <ul>
+        {props.tagSlugs.map((slug, i) => {
+          const tag = tags.find(t => t.slug === slug);
+          return (
+            <li key={slug}>
+              <div className="recipe-tag" style={{'--tag-hue': tag.color}}>
+                {tag.tag}
+                <button title="Remove tag" onClick={() => remove(i)}><FontAwesomeIcon icon={faX}/></button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      {/* TODO: implement tag selection menu */}
+      <button title="Add tag"><FontAwesomeIcon icon={faPlus}/></button>
+    </div>
+  )
+}
+
+TagsEditor.propTypes = {
+  tagSlugs: PropTypes.arrayOf(PropTypes.string).isRequired,
+  setTagSlugs: PropTypes.func.isRequired,
+  update: PropTypes.func.isRequired,
 };
 
 function IngredientsEditor(props) {
