@@ -37,7 +37,7 @@ function OverflowMenuProvider(props) {
 }
 
 function OverflowMenu(props) {
-  const [{ open, positionedOver, items, content, align }] = useOverflowMenu();
+  const [{ open, positionedOver, items, content, align }, setState] = useOverflowMenu();
 
   let x, y;
   if (positionedOver) {
@@ -116,21 +116,26 @@ OverflowMenuButton.propTypes = {
 };
 
 function Item(props) {
+  const overflowMenu = useOverflowMenu_pub();
   const icon = props.icon ? <FontAwesomeIcon icon={props.icon} /> : (<div></div>);
 
   if (props.target.type === 'link') {
     return (
       <li className="overflow-menu-item">
-        <Link to={props.target.to} disabled={props.disabled}>
+        <Link to={props.target.to} disabled={props.disabled} onClick={overflowMenu.close}>
           {icon}
           {props.name}
         </Link>
       </li>
     );
   } else if (props.target.type === 'button') {
+    const click = (e) => {
+      overflowMenu.close();
+      props.target.onClick(e);
+    };
     return (
       <li className="overflow-menu-item">
-        <button onClick={props.target.onClick} disabled={props.disabled}>
+        <button onClick={click} disabled={props.disabled}>
           {icon}
           {props.name}
         </button>
