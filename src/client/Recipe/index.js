@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faPencil } from '@fortawesome/free-solid-svg-icons';
@@ -17,6 +18,8 @@ import Page from '../Page';
 function Recipe(props) {
   const slug = props.match.params.slug;
 
+  const { t } = useTranslation();
+
   const history = useHistory();
   const { data: recipe } = useQuery(getRecipe, { slug });
   const { data: tags } = useQuery(getTags);
@@ -24,7 +27,7 @@ function Recipe(props) {
   const pageTitle =
     !recipe
       ? 'Loading...'
-      : <h1 className="recipe-page-title">{recipe.title}<Link to={`/recipe/edit?slug=${slug}`}><FontAwesomeIcon icon={faPencil} /></Link></h1>
+      : <h1 className="recipe-page-title">{recipe.title}<Link title={t('Edit (recipe)')} to={`/recipe/edit?slug=${slug}`}><FontAwesomeIcon icon={faPencil} /></Link></h1>
   ;
 
   return (
@@ -40,8 +43,8 @@ function Recipe(props) {
         </div>
         <div className="recipe-buttons">
           <div className="recipe-buttons-flex">
-            <button title="Back" onClick={() => history.goBack()}><FontAwesomeIcon icon={faArrowLeft} /></button>
-            <Link title="Edit" to={`/recipe/edit?slug=${slug}`}><FontAwesomeIcon icon={faPencil} /></Link>
+            <button title={t('Back')} onClick={() => history.goBack()}><FontAwesomeIcon icon={faArrowLeft} /></button>
+            <Link title={t('Edit (recipe)')} to={`/recipe/edit?slug=${slug}`}><FontAwesomeIcon icon={faPencil} /></Link>
           </div>
         </div>
         <h1>{recipe ? recipe.title : 'Loading...'}</h1>
@@ -51,8 +54,14 @@ function Recipe(props) {
           <div className="recipe-info">
             <p className="recipe-description">{recipe && recipe.description}</p>
             <div className="recipe-stats">
-              <div className="recipe-stat"><span className="stat-name">Time</span>{recipe && recipe.time}</div>
-              <div className="recipe-stat"><span className="stat-name">Servings</span>{recipe && recipe.servings}</div>
+              <div className="recipe-stat">
+                <span className="stat-name">{t('Time')}</span>
+                {recipe && recipe.time}
+              </div>
+              <div className="recipe-stat">
+                <span className="stat-name">{t('Servings')}</span>
+                {recipe && recipe.servings}
+              </div>
             </div>
             <div className="recipe-tags">
               {tags && recipe && recipe.tagSlugs.map(slug => (<Tag tags={tags} slug={slug} key={slug} />))}
@@ -61,13 +70,13 @@ function Recipe(props) {
           <img src={recipe && recipe.imageURI} />
         </div>
         <div className="recipe-ingredients">
-          <h2>Ingredients</h2>
+          <h2>{t('Ingredients')}</h2>
           <ul>
             {recipe && recipe.ingredients.map((ingredient, i) => (<li key={i}>{ingredient.text}</li>))}
           </ul>
         </div>
         <div className="recipe-instructions">
-          <h2>Instructions</h2>
+          <h2>{t('Instructions')}</h2>
           <RichText content={recipe ? recipe.instructions : ''} />
         </div>
       </main>

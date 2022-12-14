@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faX, faPencil } from '@fortawesome/free-solid-svg-icons';
@@ -21,6 +22,8 @@ import Tag from '../Components/Tag';
 import Page from '../Page';
 
 const RecipesPage = (_props) => {
+  const { t } = useTranslation();
+
   const { data: tags } = useQuery(getTags);
   const { data: recipes } = useQuery(getRecipes);
 
@@ -34,9 +37,9 @@ const RecipesPage = (_props) => {
           className="recipes-page"
           toolbar={<RecipesSearch toolbar tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />}
           active={"/recipes"}
-          title={"Recipes"}
+          title={t('Recipes')}
         >
-          <h1>Recipes</h1>
+          <h1>{t('Recipes')}</h1>
           <RecentRecipes tags={tags} recipes={recipes} />
           <RecipesSearch tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
           <RecipesList recipes={recipes} tags={tags} q={q} selectedTags={selectedTags} />
@@ -49,11 +52,12 @@ const RecipesPage = (_props) => {
 }
 
 function RecentRecipes(props) {
-  // TODO unimplemented (and unstyled)
-  // TODO: implement API endpoint for this and grab the data from there;
-  const recentRecipes = [
-    { slug: 'pigs-in-a-blanket-gd4hzl52kb', imageURI: 'https://hips.hearstapps.com/delish/assets/18/08/1519247372-delish-pigs-in-a-blanket.jpg', tagSlugs: ['appetizer-dl648gjx9f', 'cheap-d85jgz856l'] }
-  ];
+  const { t } = useTranslation();
+
+  const recentRecipes = [];
+  // const recentRecipes = [
+  //   { slug: 'pigs-in-a-blanket-gd4hzl52kb', imageURI: 'https://hips.hearstapps.com/delish/assets/18/08/1519247372-delish-pigs-in-a-blanket.jpg', tagSlugs: ['appetizer-dl648gjx9f', 'cheap-d85jgz856l'] }
+  // ];
 
   const coloredRecentRecipes = recentRecipes && recentRecipes.map(recipe => {
     let color = '0';
@@ -66,16 +70,16 @@ function RecentRecipes(props) {
 
   return (
     <div className="recipes-recent">
-      <h2>Recent Recipes</h2>
+      <h2>{t('Recent Recipes')}</h2>
       {recentRecipes && (
         recentRecipes.length === 0
-          ? (<p>No recent activity</p>)
+          ? (<p>{t('No recent activity')}</p>)
           : (
             <ul className="recent-list">
               {coloredRecentRecipes.map(({ slug, imageURI, color }) => (
                 <li key={slug}>
                   <Link className="recent-item" to={`/recipe/view/${slug}`} style={{ '--tag-hue': color }}>
-                    <img src={imageURI} />
+                    <img src={imageURI} alt='' />
                   </Link>
                 </li>
               ))}
@@ -87,9 +91,10 @@ function RecentRecipes(props) {
 }
 
 function RecipesSearch(props) {
+  const { t } = useTranslation();
+  
   const tags = props.tags;
 
-  // TODO: flow this state down from the parent
   const { selectedTags, setSelectedTags } = props;
   const toggleTag = (slug) => {
     const tagIdx = selectedTags.indexOf(slug);
@@ -112,7 +117,7 @@ function RecipesSearch(props) {
   return (
     <div className="recipes-search" data-toolbar={props.toolbar}>
       <div className="tag-filters-container">
-        <button className="tag-filters-clear" data-show={selectedTags.length > 0} onClick={() => setSelectedTags([])}>
+        <button title={t('Clear filters')} className="tag-filters-clear" data-show={selectedTags.length > 0} onClick={() => setSelectedTags([])}>
           <FontAwesomeIcon icon={faX} />
         </button>
         <ul className="tag-filters">
@@ -129,12 +134,12 @@ function RecipesSearch(props) {
       </div>
       <div className="recipes-search-flow">
         <div className="searchfield-container">
-          <input className="searchfield" type="text" value={props.q} onChange={e => props.setq(e.target.value)} placeholder="Search your recipes" />
-          <button title="Clear searchbar" className="searchfield-clear" data-show={props.q !== ''} onClick={() => props.setq('')}>
+          <input className="searchfield" type="text" value={props.q} onChange={e => props.setq(e.target.value)} placeholder={t('Search recipes')} />
+          <button title={t('Clear search')} className="searchfield-clear" data-show={props.q !== ''} onClick={() => props.setq('')}>
             <FontAwesomeIcon icon={faX} />
           </button>
         </div>
-        <Link title="Create recipe" to="/recipe/edit" className="recipe-new"><FontAwesomeIcon icon={faPlus} /></Link>
+        <Link title={t('Create recipe')} to="/recipe/edit" className="recipe-new"><FontAwesomeIcon icon={faPlus} /></Link>
       </div>
     </div>
   );
@@ -151,6 +156,8 @@ function RecipesList(props) {
 }
 
 function Recipe(props) {
+  const { t } = useTranslation();
+
   const actuallyDeleteRecipe = async () => {
     try {
       await deleteRecipe({ slug: props.recipe.slug });
@@ -159,11 +166,11 @@ function Recipe(props) {
     }
   }
   const deleteModal = useModal((closeModal) => ({
-    title: 'Delete Recipe?',
-    body: (<p>Once you delete a recipe, it's gone forever. There is no undo.</p>),
+    title: t('Are you sure?'),
+    body: (<p>{t('Delete {{recipe}} warning', { recipe: props.recipe.title })}</p>),
     actions: [
-      <button className="modal-action warn" onClick={() => { closeModal(); actuallyDeleteRecipe(); }}>Delete</button>,
-      <button className="modal-action" onClick={closeModal}>Cancel</button>
+      <button className="modal-action warn" onClick={() => { closeModal(); actuallyDeleteRecipe(); }}>{t('Delete (recipe)')}</button>,
+      <button className="modal-action" onClick={closeModal}>{t('Cancel')}</button>
     ],
   }));
   const beginDeleteRecipe = () => {
@@ -171,8 +178,8 @@ function Recipe(props) {
   };
 
   const overflowOptions = [
-    { name: 'Edit', target: { type: 'link', to: `/recipe/edit?slug=${props.recipe.slug}` }, icon: faPencil },
-    { name: 'Delete', target: { type: 'button', onClick: beginDeleteRecipe }, icon: faTrashCan },
+    { name: t('Edit (recipe)'), target: { type: 'link', to: `/recipe/edit?slug=${props.recipe.slug}` }, icon: faPencil },
+    { name: t('Delete (recipe)'), target: { type: 'button', onClick: beginDeleteRecipe }, icon: faTrashCan },
   ];
 
   return (

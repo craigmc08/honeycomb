@@ -87,7 +87,7 @@ function OverflowMenuButton(props) {
   }
 
   return (
-    <button className={`overflow-menu-btn ${props.className || ''}`} onClick={e => toggleOpen(e)}>
+    <button title={props.title} className={`overflow-menu-btn ${props.className || ''}`} onClick={e => toggleOpen(e)}>
       <FontAwesomeIcon icon={props.icon || faEllipsisV} />
     </button>
   )
@@ -113,6 +113,7 @@ OverflowMenuButton.propTypes = {
   className: PropTypes.string,
   icon: PropTypes.object,
   align: PropTypes.oneOf(['left', 'right']),
+  title: PropTypes.string,
 };
 
 function Item(props) {

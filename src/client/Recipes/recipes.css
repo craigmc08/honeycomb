@@ -59,6 +59,10 @@ RECENT RECIPES
   font-size: 15px;
   color: var(--primary-light);
 }
+.recipes-recent p {
+  font-size: 12px;
+  color: var(--primary-light);
+}
 
 .recent-list {
   display: flex;
@@ -182,7 +186,7 @@ RECIPE CARDS
 
     position: relative;
 
-    transition: transform 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    transition: border-color 0.1s linear;
   }
 
   .recipe-item-link {
@@ -195,7 +199,6 @@ RECIPE CARDS
 
   .recipe-item:hover {
     border-color: var(--accent);
-    transform: scale(1.02, 1.02);
   }
 
   .recipe-thumbnail {

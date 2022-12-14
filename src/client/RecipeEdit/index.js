@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { v4 as uuid } from 'uuid';
+import { useTranslation } from 'react-i18next';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faPlus, faX } from '@fortawesome/free-solid-svg-icons';
@@ -53,6 +54,7 @@ function RecipeEditorFromNew(props) {
 }
 
 function RecipeEditor(props) {
+  const { t } = useTranslation();
   const history = useHistory();
 
   const [modified, setModified] = useState(false);
@@ -104,7 +106,7 @@ function RecipeEditor(props) {
       <input type="text" value={title} onChange={e => update(e, title, setTitle)} />
   );
   const saveButton = (
-    <button title={props.slug ? 'Save' : 'Create recipe'} onClick={() => saveIfModified()} disabled={!modified}>
+    <button title={props.slug ? t('Save') : t('Create recipe')} onClick={() => saveIfModified()} disabled={!modified}>
       <FontAwesomeIcon icon={faFloppyDisk} />
     </button>
   );
@@ -119,11 +121,11 @@ function RecipeEditor(props) {
       >
         <div className="recipe-header">
           <div className="recipe-hero">
-            <img src={imageURI} />
+            <img src={imageURI} alt="" />
           </div>
           <div className="recipe-buttons">
             <div className="recipe-buttons-flex">
-              <button title="Back" onClick={() => history.goBack()}><FontAwesomeIcon icon={faArrowLeft} /></button>
+              <button title={t('Back')} onClick={() => history.goBack()}><FontAwesomeIcon icon={faArrowLeft} /></button>
               {saveButton}
             </div>
           </div>
@@ -135,11 +137,11 @@ function RecipeEditor(props) {
               <textarea value={description} onChange={e => update(e, description, setDescription)} />
               <div className="recipe-stats">
                 <div className="recipe-stat">
-                  <span className="stat-name">Time</span>
+                  <span className="stat-name">{t('Time')}</span>
                   <input type="text" value={time} onChange={e => update(e, time, setTime)} />
                 </div>
                 <div className="recipe-stat">
-                  <span className="stat-name">Servings</span>
+                  <span className="stat-name">{t('Servings')}</span>
                   <input type="text" value={servings} onChange={e => update(e, servings, setServings)} />
                 </div>
               </div>
@@ -148,11 +150,11 @@ function RecipeEditor(props) {
             <img src={imageURI} />
           </div>
           <div className="recipe-ingredients">
-            <h2>Ingredients</h2>
+            <h2>{t('Ingredients')}</h2>
             <IngredientsEditor ingredients={ingredients} setIngredients={setIngredients} update={set} />
           </div>
           <div className="recipe-instructions">
-            <h2>Instructions</h2>
+            <h2>{t('Instructions')}</h2>
             <textarea value={instructions} onChange={e => update(e, instructions, setInstructions)} />
           </div>
         </main>
@@ -176,6 +178,7 @@ RecipeEditor.propTypes = {
 };
 
 function TagsEditor(props) {
+  const { t } = useTranslation();
   const { data: tags } = useQuery(getTags);
   const tagSlugs = props.tagSlugs;
 
@@ -203,7 +206,7 @@ function TagsEditor(props) {
             <li key={slug}>
               <div className="recipe-tag" style={{'--tag-hue': tag.color}}>
                 {tag.tag}
-                <button title="Remove tag" onClick={() => remove(i)}><FontAwesomeIcon icon={faX}/></button>
+                <button title={t('Remove tag')} onClick={() => remove(i)}><FontAwesomeIcon icon={faX}/></button>
               </div>
             </li>
           );
@@ -213,6 +216,7 @@ function TagsEditor(props) {
         content={<TagAddEditor tags={tags} cur={tagSlugs} add={add} />}
         icon={faPlus}
         align="left"
+        title={t('Add tag')}
       />
     </div>
   )
@@ -225,6 +229,8 @@ TagsEditor.propTypes = {
 };
 
 function TagAddEditor(props) {
+  const { t } = useTranslation();
+
   const [q, setq] = useState('');
   const available = props.tags.filter(tag => {
     if (props.cur.includes(tag.slug)) return false;
@@ -240,11 +246,11 @@ function TagAddEditor(props) {
 
   return (
     <div className="tag-add-editor">
-      <input autoFocus type="text" value={q} onChange={e => setq(e.target.value)} />
+      <input autoFocus placeholder={t('Search tags')} type="text" value={q} onChange={e => setq(e.target.value)} />
       <ul className="tag-editor-list">
         {available.map(tag => (
          <li key={tag.slug}>
-           <button className="recipe-tag" style={{'--tag-hue': tag.color}} onClick={() => add(tag)}>
+           <button title={t('Add tag')} className="recipe-tag" style={{'--tag-hue': tag.color}} onClick={() => add(tag)}>
              <FontAwesomeIcon icon={faPlus}/>{tag.tag}
            </button>
          </li> 
@@ -255,6 +261,8 @@ function TagAddEditor(props) {
 }
 
 function IngredientsEditor(props) {
+  const { t } = useTranslation();
+
   const remove = (idx) => {
     const newIngredients = [...props.ingredients.slice(0, idx), ...props.ingredients.slice(idx + 1)];
     props.update(newIngredients, props.setIngredients, true);
@@ -282,12 +290,12 @@ function IngredientsEditor(props) {
     <ul className="ingredients-editor">
       {props.ingredients.map((ingredient, i) => (
         <li key={ingredient.id}>
-          <button title="Remove ingredient" onClick={() => remove(i)}><FontAwesomeIcon icon={faX} /></button>
+          <button title={t('Remove ingredient')} onClick={() => remove(i)}><FontAwesomeIcon icon={faX} /></button>
           <input type="text" value={ingredient.text} onChange={e => update(e.target.value, i)} />
         </li>
       ))}
     </ul>
-    <button title="Add ingredient" onClick={() => add()}><FontAwesomeIcon icon={faPlus} /></button>
+    <button title={t('Add ingredient')} onClick={() => add()}><FontAwesomeIcon icon={faPlus} /></button>
     </div>
   )
 }

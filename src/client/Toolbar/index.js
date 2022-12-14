@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faFolder } from '@fortawesome/free-regular-svg-icons';
 import { faListUl } from '@fortawesome/free-solid-svg-icons';
@@ -8,10 +10,12 @@ import { faListUl } from '@fortawesome/free-solid-svg-icons';
 import './toolbar.css';
 
 const Toolbar = (props) => {
+  const { t } = useTranslation();
+
   const pages = [
-    { name: 'Recipes', to: '/recipes', icon: <FontAwesomeIcon icon={faListUl} /> },
-    { name: 'Menus', to: '/menus', icon: <FontAwesomeIcon icon={faFolder} /> },
-    { name: 'Account', to: '/account', icon: <FontAwesomeIcon icon={faUser} /> }
+    { name: t('Recipes'), to: '/recipes', icon: <FontAwesomeIcon icon={faListUl} /> },
+    { name: t('Menus'), to: '/menus', icon: <FontAwesomeIcon icon={faFolder} /> },
+    { name: t('Account'), to: '/account', icon: <FontAwesomeIcon icon={faUser} /> }
   ];
 
   const title = typeof props.title === 'string' ? <h1>{props.title}</h1> : props.title;

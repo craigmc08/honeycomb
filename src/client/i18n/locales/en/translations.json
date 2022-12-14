@@ -1,0 +1,31 @@
+{
+  "Recipes": "Recipes",
+  "Menus": "Menus",
+  "Account": "Account",
+  "Made with <1>Wasp =}</1>": "Made with <1>Wasp =}</1>",
+
+  "Recent Recipes": "Recent Recipes",
+  "No recent activity": "No recent activity",
+  "Search recipes": "Search your recipes",
+  "Create recipe": "Create recipe",
+  "Edit (recipe)": "Edit",
+  "Delete (recipe)": "Delete",
+  "Are you sure?": "Are you sure?",
+  "Delete {{recipe}} warning": "Once you delete your {{recipe}} recipe, it can not be undone.",
+  "Cancel": "Cancel",
+  "Clear filters": "Clear filters",
+  "Clear search": "Clear search",
+
+  "Back": "Back",
+  "Time": "Time",
+  "Servings": "Servings",
+  "Ingredients": "Ingredients",
+  "Instructions": "Instructions",
+
+  "Save": "Save",
+  "Remove tag": "Remove tag",
+  "Add tag": "Add tag",
+  "Remove ingredient": "Remove ingredient",
+  "Add ingredient": "Add ingredient",
+  "Search tags": "Search tags"
+}
