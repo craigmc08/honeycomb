@@ -12,6 +12,7 @@ import { useQuery } from '@wasp/queries';
 import getRecipe from '@wasp/queries/getRecipe';
 import getTags from '@wasp/queries/getTags';
 import createRecipe from '@wasp/actions/createRecipe';
+import updateRecipe from '@wasp/actions/updateRecipe';
 
 import './recipeedit.css';
 import '../Recipe/recipe.css';
@@ -70,8 +71,22 @@ function RecipeEditor(props) {
   const saveIfModified = async () => {
     if (modified) {
       if (props.slug) {
-        // TODO: call save endpoint
-        console.log(`saving to ${props.slug}`);
+        try {
+          await updateRecipe({
+            slug: props.slug,
+            title,
+            description,
+            imageURI,
+            time,
+            servings,
+            tagSlugs,
+            ingredients,
+            instructions
+          });
+          setModified(false);
+        } catch (e) {
+          console.warn(`Failed to save recipe ${props.slug}: ${e}`);
+        }
       } else {
         try {
           const { slug } = await createRecipe({
@@ -87,7 +102,7 @@ function RecipeEditor(props) {
           setModified(false);
           history.push(`/recipe/view/${slug}`);
         } catch (e) {
-          console.error(`Failed to save: ${e}`);
+          console.error(`Failed to create new recipe: ${e}`);
         }
       }
     }

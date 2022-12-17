@@ -2,10 +2,13 @@ import HttpError from '@wasp/core/HttpError.js'
 
 import * as schema from './recipe.schema.js';
 
-export async function getRecipes(args, context) {
+export async function getRecipes(userArgs, context) {
   if (!context.user) { throw new HttpError(401); }
-  if (!schema.getRecipes.isValidSync(args)) {
-    throw new HttpError(400);
+  let args;
+  try {
+    args = schema.getRecipes.validateSync(userArgs);
+  } catch (e) {
+    throw new HttpError(400, e.message);
   }
 
   const where = {
@@ -50,7 +53,7 @@ export async function getRecipes(args, context) {
   }));
 }
 
-export async function getTags(_args, context) {
+export async function getTags(_userArgs, context) {
   if (!context.user) { throw new HttpError(401); }
 
   return context.entities.RecipeTag.findMany({
@@ -65,11 +68,15 @@ export async function getTags(_args, context) {
   });
 }
 
-export async function getRecipe(args, context) {
+export async function getRecipe(userArgs, context) {
   if (!context.user) { throw new HttpError(401); }
-  if (!schema.getRecipe.validateSync(args)) {
-    throw new HttpError(400);
+  let args;
+  try {
+    args = schema.getRecipe.validateSync(userArgs);
+  } catch (e) {
+    throw new HttpError(400, e.message);
   }
+  
   const recipe = await context.entities.Recipe.findUnique({
     where: {
       slug: args.slug,
@@ -99,11 +106,13 @@ export async function getRecipe(args, context) {
   return recipe;
 }
 
-export async function createRecipe(args, context) {
+export async function createRecipe(userArgs, context) {
   if (!context.user) { throw new HttpError(401); }
-
-  if (!schema.createRecipe.isValidSync(args)) {
-    throw new HttpError(400);
+  let args;
+  try {
+    args = schema.createRecipe.validateSync(userArgs);
+  } catch (e) {
+    throw new HttpError(400, e.message);
   }
 
   if (!authenticateTags(context, context.user.id, args.tagSlugs)) {
@@ -134,10 +143,13 @@ export async function createRecipe(args, context) {
   return { slug };
 }
 
-export async function deleteRecipe(args, context) {
+export async function deleteRecipe(userArgs, context) {
   if (!context.user) { throw new HttpError(401); }
-  if (!schema.deleteRecipe.isValidSync(args)) {
-    throw new HttpError(400);
+  let args;
+  try {
+    args = schema.deleteRecipe.validateSync(userArgs);
+  } catch (e) {
+    throw new HttpError(400, e.message);
   }
 
   // Make sure the logged in user owns the recipe
@@ -160,17 +172,73 @@ export async function deleteRecipe(args, context) {
   });
 }
 
-export function updateRecipe(args, context) {
+export async function updateRecipe(userArgs, context) {
   if (!context.user) { throw new HttpError(401); }
+  let args;
+  try {
+    args = schema.updateRecipe.validateSync(userArgs);
+  } catch (e) {
+    throw new HttpError(400, e.message);
+  }
 
-  // TODO: check in DB if context.user is owner of the given recipe
-  // TODO: check to make sure user owns all of the given tags
-  // (if no ownership or any of these are missing, respond with BAD REQUEST)
+  // Check that the recipe to update exists and is owned by the logged in user
+  const oldRecipe = await context.entities.Recipe.findUnique({
+    where: {
+      slug: args.slug,
+    },
+    select: {
+      owner: { select: { id: true } },
+      id: true,
+    },
+  });
+  if (!oldRecipe || oldRecipe.owner.id !== context.user.id) {
+    // Respond with NotFound if the recipe doesn't exist or the user doesn't have
+    // privilege to modify it
+    throw new HttpError(404, 'Recipe not found');
+  }
+  const { id: recipeId } = oldRecipe;
 
-  // TODO: update data in recipe entity
+  // Ensure ownership and existence of tags
+  if (!authenticateTags(context, context.user.id, args.tagSlugs)) {
+    throw new HttpError(404, 'Tag not found');
+  }
 
-  // TODO: figure out ingredients list change set and update it
-  // (and insert new ingredient rows when needed)
+  // Update recipe data
+  await context.entities.Recipe.update({
+    where: {
+      id: recipeId,
+    },
+    data: {
+      title: args.title,
+      description: args.description,
+      time: args.time,
+      servings: args.servings,
+      imageURI: args.imageURI,
+      tags: {
+        set: args.tagSlugs.map(ts => ({ slug: ts })),
+      },
+      // Ingredients will be updated in the next step
+      instructions: args.instructions,
+    },
+  });
+
+  // TODO: is it worth to diff old and new ingredients?
+
+  // Remove old ingredients
+  await context.entities.Ingredient.deleteMany({
+    where: {
+      recipe: { id: recipeId },
+    },
+  });
+  // Add new ingredients
+  await Promise.all(args.ingredients.map(ingredient => (
+    context.entities.Ingredient.create({
+      data: {
+        text: ingredient.text,
+        recipe: { connect: { id: recipeId } },
+      },
+    })
+  )));
 } 
 
 /**

@@ -8,6 +8,9 @@ Good things:
 
 Pain points:
 
+0.  DB transactions. We can't access prisma's built-in transaction system, as far
+    as I am aware.
+
 1.  usernameAndPassword auth methods requires certain names in DB, but I want to
     use different column names (I want email instead of username). Makes my DB
     schema a little bit more confusing.
