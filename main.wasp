@@ -58,6 +58,19 @@ page RecipeEdit {
   component: import RecipeEdit from "@client/RecipeEdit"
 }
 
+route AccountRoute { path: "/account", to: Account }
+page Account {
+  component: import Account from "@client/Account"
+}
+
+// requires auth
+// args: none
+// returns: { username: String }
+query getUsername {
+  fn: import { getUsername } from "@server/api/account.js",
+  entities: [User]
+}
+
 // requires auth
 // args: { tagSlugs?: [String], q?: String }
 // returns: [{ slug: String, title: String, description: String, imageURI?: String, tagSlugs: String }]

@@ -27,5 +27,14 @@
   "Add tag": "Add tag",
   "Remove ingredient": "Remove ingredient",
   "Add ingredient": "Add ingredient",
-  "Search tags": "Search tags"
+  "Search tags": "Search tags",
+
+  "Your Account": "Your Account",
+  "Welcome, {{name}}!": "Welcome, {{name}}!",
+  "Change Name": "Change Name",
+  "Change Email": "Change Email",
+  "Change Password": "Change Password",
+  "Manage Tags": "Manage Tags",
+  "Language": "Language",
+  "Delete Account": "Delete Account"
 }
