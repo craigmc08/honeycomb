@@ -6,7 +6,7 @@ import { faX } from '@fortawesome/free-solid-svg-icons';
 import './Modal.css';
 import { useDocumentListener } from '../documentListener';
 
-const ModalContext = createContext([[], ([]) => void 0]);
+const ModalContext = createContext([[], () => void 0]);
 const useModalCtx = () => useContext(ModalContext);
 
 function ModalProvider(props) {
@@ -34,53 +34,81 @@ function Modal(props) {
   });
 
   const isShown = modals.length > 0;
-  const modal = modals[0] && modals[0](closeModal);
+  const Component = modals[0];
 
   return (
     <div className="modal-container" onClick={closeModal} aria-hidden={!isShown}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}> {/* to prevent closing the modal when clicking in it */}
-        <div className="modal-header">
-          <h1>{modal && modal.title}</h1>
-          <button className="modal-close" onClick={() => closeModal()}>
-            <FontAwesomeIcon icon={faX} />
-          </button>
-        </div>
-        <div className="modal-body">
-          {modal && modal.body}
-        </div>
-        <ul className="modal-actions">
-          {modal && modal.actions.map((action, i) => (<li key={i}>{action}</li>))}
-        </ul>
-      </div>
+      { Component && <Component closeModal={closeModal} /> }
     </div>
   );
 }
 
 /**
- * Pass in a function that takes in a `closeModal` function and returns a modal
- * object:
- * 
+ * `useModal(component)`
+ * @param {ReactElement} component
+ *
+ * `component` can use a `closeModal` prop, which is a function used to close
+ * the modal.
+ *
+ * Consider using the `ModalX` elements to get a consistent layout:
+ *
  * ```
- * {
- *  title: string,
- *  body: ReactElement[],
- *  actions: ReactElement[],
- * }
+ * <ModalLayout>
+ *   <ModalTitle closeModal={props.closeModal}>{title}</ModalTitle>
+ *   <ModalBody>{body}</ModalBody>
+ *   <ModalActions>{action buttons}</ModalActions>
+ * </ModalLayout>
  * ```
- * 
+ *
  * Classes for modal action buttons: modal-action, primary, warn
  */
-function useModal(builder) {
+function useModal(Component) {
   const [modals, setModals] = useModalCtx();
 
   return {
     open: () => {
-      setModals([builder, ...modals]);
+      setModals([Component, ...modals]);
     },
   };
+}
+
+function ModalLayout(props) {
+  return (
+    <div className="modal" onClick={e => e.stopPropagation()}> {/* to prevent closing the modal when clicking in side it */}
+      {props.children}
+    </div>
+  );
+}
+function ModalTitle(props) {
+  return (
+    <div className="modal-header">
+      <h1>{props.children}</h1>
+      <button className="modal-close" onClick={() => props.closeModal()}>
+        <FontAwesomeIcon icon={faX} />
+      </button>
+    </div>
+  );
+}
+function ModalBody(props) {
+  return (
+    <div className="modal-body">
+      {props.children}
+    </div>
+  );
+}
+function ModalActions(props) {
+  return (
+    <ul className="modal-actions">
+      {props.children.map((action, i) => (<li key={i}>{action}</li>))}
+    </ul>
+  );
 }
 
 export {
   ModalProvider,
   useModal,
-}
+  ModalLayout,
+  ModalTitle,
+  ModalBody,
+  ModalActions,
+};

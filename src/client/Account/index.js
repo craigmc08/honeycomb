@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState}  from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -22,7 +22,8 @@ const AccountPage = (_props) => {
   const { data: user } = useQuery(getUsername);
   const username = user ? user.username : undefined;
 
-  const startNameChange = () => {};
+  const startNameChange = () => {
+  };
   const startEmailChange = () => {};
   const startPasswordChange = () => {};
   const startDeleteAccount = () => {};
