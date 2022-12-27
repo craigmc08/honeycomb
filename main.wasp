@@ -70,6 +70,20 @@ query getUsername {
   fn: import { getUsername } from "@server/api/account.js",
   entities: [User]
 }
+// requires auth
+// args: { username: string }
+// returns nothing
+action updateUsername {
+  fn: import { updateUsername } from "@server/api/account.js",
+  entities: [User]
+}
+// requires auth
+// args: { email: string }
+// returns nothing (fails if email is no longer unique)
+action updateEmail {
+  fn: import { updateEmail } from "@server/api/account.js",
+  entities: [User]
+}
 
 // requires auth
 // args: { tagSlugs?: [String], q?: String }

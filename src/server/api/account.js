@@ -21,3 +21,50 @@ export async function getUsername(userArgs, context) {
 
   return { username: user.name };
 }
+
+export async function updateUsername(userArgs, context) {
+  if (!context.user) { throw new HttpError(401); }
+
+  let args;
+  try {
+    args = schema.updateUsername.validateSync(userArgs);
+  } catch (e) {
+    throw new HttpError(400, e.message);
+  }
+
+  await context.entities.User.update({
+    where: {
+      id: context.user.id,
+      data: {
+        name: args.username,
+      },
+    },
+  });
+}
+
+export async function updateEmail(userArgs, context) {
+  if (!context.user) { throw new HttpError(401); }
+  let args;
+  try {
+    args = schema.updateEmail.validateSync(userArgs);
+  } catch (e) {
+    throw new HttpError(400, e.message);
+  }
+
+  try {
+    await context.entities.User.update({
+      where: {
+        id: context.user.id,
+      },
+      data: {
+        username: args.email,
+      },
+    });
+  } catch (e) {
+    if (e.code === 'P2002') {
+      throw new HttpError(400, 'Email already in use');
+    } else {
+      throw e;
+    }
+  }
+}
