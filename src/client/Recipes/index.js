@@ -17,7 +17,7 @@ import deleteRecipe from '@wasp/actions/deleteRecipe';
 
 import Footer from '../Footer';
 import { OverflowMenuProvider, OverflowMenuButton } from '../Components/OverflowMenu';
-import { ModalProvider, useModal } from '../Components/Modal';
+import { Modal, ModalCloseButton, ModalHeader, ModalTitle, ModalBody, ModalActions, ModalProvider } from '../Components/Modal';
 import Tag from '../Components/Tag';
 import Page from '../Page';
 
@@ -158,6 +158,7 @@ function RecipesList(props) {
 function Recipe(props) {
   const { t } = useTranslation();
 
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const actuallyDeleteRecipe = async () => {
     try {
       await deleteRecipe({ slug: props.recipe.slug });
@@ -165,21 +166,10 @@ function Recipe(props) {
       console.warn(`Failed to delete recipe ${props.recipe.slug}: ${e}`);
     }
   }
-  const deleteModal = useModal((closeModal) => ({
-    title: t('Are you sure?'),
-    body: (<p>{t('Delete {{recipe}} warning', { recipe: props.recipe.title })}</p>),
-    actions: [
-      <button className="modal-action warn" onClick={() => { closeModal(); actuallyDeleteRecipe(); }}>{t('Delete (recipe)')}</button>,
-      <button className="modal-action" onClick={closeModal}>{t('Cancel')}</button>
-    ],
-  }));
-  const beginDeleteRecipe = () => {
-    deleteModal.open();
-  };
 
   const overflowOptions = [
     { name: t('Edit (recipe)'), target: { type: 'link', to: `/recipe/edit?slug=${props.recipe.slug}` }, icon: faPencil },
-    { name: t('Delete (recipe)'), target: { type: 'button', onClick: beginDeleteRecipe }, icon: faTrashCan },
+    { name: t('Delete (recipe)'), target: { type: 'button', onClick: () => setDeleteModalOpen(true) }, icon: faTrashCan },
   ];
 
   return (
@@ -197,7 +187,27 @@ function Recipe(props) {
         </div>
       </Link>
       <OverflowMenuButton items={overflowOptions} className="recipe-item-overflow" />
+      <DeleteModal recipe={props.recipe} deleteRecipe={actuallyDeleteRecipe} state={[deleteModalOpen, setDeleteModalOpen]} />
     </li>
+  );
+}
+
+function DeleteModal(props) {
+  const { t } = useTranslation();
+  const [open, setOpen] = props.state;
+    
+  return (
+    <Modal open={open} setOpen={setOpen}>
+      <ModalHeader>
+        <ModalTitle>{t('Delete the recipe?')}</ModalTitle>
+        <ModalCloseButton setOpen={setOpen} />
+      </ModalHeader>
+      <ModalBody><p>{t('Delete {{recipe}} warning', { recipe: props.recipe.title })}</p></ModalBody>
+      <ModalActions>
+        <button className="modal-action warn" onClick={() => { setOpen(false); props.deleteRecipe(); }}>{t('Delete (recipe)')}</button>
+        <button className="modal-action" onClick={() => setOpen(false)}>{t('Cancel')}</button>
+      </ModalActions>
+    </Modal>
   );
 }
 
