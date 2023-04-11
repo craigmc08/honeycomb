@@ -52,8 +52,6 @@ function Modal(props) {
         </div>
       ),
     });
-  } else {
-    setModal(null);
   }
 
   return null;

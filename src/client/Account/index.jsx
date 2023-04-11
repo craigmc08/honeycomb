@@ -13,7 +13,7 @@ import getUsername from '@wasp/queries/getUsername';
 // import updatePassword from '@wasp/actions/updatePassword';
 
 import Footer from '../Footer';
-import { ModalProvider, useModal } from '../Components/Modal';
+import { ModalProvider } from '../Components/Modal';
 import Page from '../Page';
 
 const AccountPage = (_props) => {
