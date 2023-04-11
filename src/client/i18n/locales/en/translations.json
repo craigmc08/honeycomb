@@ -11,6 +11,7 @@
   "Edit (recipe)": "Edit",
   "Delete (recipe)": "Delete",
   "Are you sure?": "Are you sure?",
+  "Delete the recipe?": "Delete recipe?",
   "Delete {{recipe}} warning": "Once you delete your {{recipe}} recipe, it can not be undone.",
   "Cancel": "Cancel",
   "Clear filters": "Clear filters",

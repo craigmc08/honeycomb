@@ -13,7 +13,6 @@ import getUsername from '@wasp/queries/getUsername';
 // import updatePassword from '@wasp/actions/updatePassword';
 
 import Footer from '../Footer';
-import { ModalProvider } from '../Components/Modal';
 import Page from '../Page';
 
 const AccountPage = (_props) => {
@@ -29,26 +28,24 @@ const AccountPage = (_props) => {
   const startDeleteAccount = () => {};
 
   return (
-    <ModalProvider>
-      <Page
-        className="account-page"
-        active={"/account"}
-        title={t('Your Account')}
-      >
-        <h2>{t('Your Account')}</h2>
-        <h1>{username || 'Loading...'}</h1>
+    <Page
+      className="account-page"
+      active={"/account"}
+      title={t('Your Account')}
+    >
+      <h2>{t('Your Account')}</h2>
+      <h1>{username || 'Loading...'}</h1>
 
-        <h2 className="account-welcome-msg">{t('Welcome, {{name}}!', { name: username })}</h2>
+      <h2 className="account-welcome-msg">{t('Welcome, {{name}}!', { name: username })}</h2>
 
-        <ul className="account-items">
-          <li><button onClick={startNameChange}>{t('Change Name')}</button></li>
-          <li><button onClick={startEmailChange}>{t('Change Email')}</button></li>
-          <li><button onClick={startPasswordChange}>{t('Change Password')}</button></li>
-          <li><Link to="/manage-tags">{t('Manage Tags')}</Link></li>
-          <li><button className="account-item-warn" onClick={startDeleteAccount}>{t('Delete Account')}</button></li>
-        </ul>
-      </Page>
-    </ModalProvider>
+      <ul className="account-items">
+        <li><button onClick={startNameChange}>{t('Change Name')}</button></li>
+        <li><button onClick={startEmailChange}>{t('Change Email')}</button></li>
+        <li><button onClick={startPasswordChange}>{t('Change Password')}</button></li>
+        <li><Link to="/manage-tags">{t('Manage Tags')}</Link></li>
+        <li><button className="account-item-warn" onClick={startDeleteAccount}>{t('Delete Account')}</button></li>
+      </ul>
+    </Page>
   )
 }
 

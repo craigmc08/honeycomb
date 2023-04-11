@@ -21,6 +21,7 @@ app honeycomb {
     ("yup", "^0.32.11"),
     ("i18next", "^22.4.5"),
     ("react-i18next", "^12.1.1"),
+    ("react-modal", "^3.16.1"),
   ],
   client: {
     setupFn: import setupClient from "@client/setup.js",

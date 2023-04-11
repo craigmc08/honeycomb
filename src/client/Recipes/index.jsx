@@ -17,7 +17,7 @@ import deleteRecipe from '@wasp/actions/deleteRecipe';
 
 import Footer from '../Footer';
 import { OverflowMenuProvider, OverflowMenuButton } from '../Components/OverflowMenu';
-import { Modal, ModalCloseButton, ModalHeader, ModalTitle, ModalBody, ModalActions, ModalProvider } from '../Components/Modal';
+import { Modal, ModalAction, ModalActions, ModalBody, ModalTitle } from '../Components/Modal';
 import Tag from '../Components/Tag';
 import Page from '../Page';
 
@@ -31,23 +31,21 @@ const RecipesPage = (_props) => {
   const [selectedTags, setSelectedTags] = useState([]);
 
   return (
-    <ModalProvider>
-      <OverflowMenuProvider>
-        <Page
-          className="recipes-page"
-          toolbar={<RecipesSearch toolbar tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />}
-          active={"/recipes"}
-          title={t('Recipes')}
-        >
-          <h1>{t('Recipes')}</h1>
-          <RecentRecipes tags={tags} recipes={recipes} />
-          <RecipesSearch tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
-          <RecipesList recipes={recipes} tags={tags} q={q} selectedTags={selectedTags} />
-          <div className="footer-space"></div>
-          <Footer />
-        </Page>
-      </OverflowMenuProvider>
-    </ModalProvider>
+    <OverflowMenuProvider>
+      <Page
+        className="recipes-page"
+        toolbar={<RecipesSearch toolbar tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />}
+        active={"/recipes"}
+        title={t('Recipes')}
+      >
+        <h1>{t('Recipes')}</h1>
+        <RecentRecipes tags={tags} recipes={recipes} />
+        <RecipesSearch tags={tags} q={q} setq={setq} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+        <RecipesList recipes={recipes} tags={tags} q={q} selectedTags={selectedTags} />
+        <div className="footer-space"></div>
+        <Footer />
+      </Page>
+    </OverflowMenuProvider>
   );
 }
 
@@ -159,6 +157,7 @@ function Recipe(props) {
   const { t } = useTranslation();
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const closeDeleteModal = () => setDeleteModalOpen(false);
   const actuallyDeleteRecipe = async () => {
     try {
       await deleteRecipe({ slug: props.recipe.slug });
@@ -187,27 +186,23 @@ function Recipe(props) {
         </div>
       </Link>
       <OverflowMenuButton items={overflowOptions} className="recipe-item-overflow" />
-      <DeleteModal recipe={props.recipe} deleteRecipe={actuallyDeleteRecipe} state={[deleteModalOpen, setDeleteModalOpen]} />
+      <Modal
+        isOpen={deleteModalOpen}
+        onRequestClose={closeDeleteModal}
+        contentLabel={t('Delete the recipe?')}
+      >
+        <ModalTitle requestClose={closeDeleteModal}>{t('Delete the recipe?')}</ModalTitle>
+        <ModalBody>
+          <p>{t('Delete {{recipe}} warning', { recipe: props.recipe.title })}</p>
+        </ModalBody>
+        <ModalActions>
+          <ModalAction warn requestClose={closeDeleteModal} action={actuallyDeleteRecipe}>
+            {t('Delete (recipe)')}
+          </ModalAction>
+          <ModalAction requestClose={closeDeleteModal}>{t('Cancel')}</ModalAction>
+        </ModalActions>
+      </Modal>
     </li>
-  );
-}
-
-function DeleteModal(props) {
-  const { t } = useTranslation();
-  const [open, setOpen] = props.state;
-    
-  return (
-    <Modal open={open} setOpen={setOpen}>
-      <ModalHeader>
-        <ModalTitle>{t('Delete the recipe?')}</ModalTitle>
-        <ModalCloseButton setOpen={setOpen} />
-      </ModalHeader>
-      <ModalBody><p>{t('Delete {{recipe}} warning', { recipe: props.recipe.title })}</p></ModalBody>
-      <ModalActions>
-        <button className="modal-action warn" onClick={() => { setOpen(false); props.deleteRecipe(); }}>{t('Delete (recipe)')}</button>
-        <button className="modal-action" onClick={() => setOpen(false)}>{t('Cancel')}</button>
-      </ModalActions>
-    </Modal>
   );
 }
 
