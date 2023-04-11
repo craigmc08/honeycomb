@@ -37,6 +37,9 @@ Pain points:
 6.  Debugging sometimes ends up with me looking through generated code. This is
     workable, but it'd be cool to be able to avoid this!
 
+7.  I would really like to deploy with an SQLite database. Sometimes postgresql
+    is overkill.
+
 Things I would like to see but it isn't that bad to not have them:
 
 1.  IDE support for prisma declarations in a wasp file would be nice.
