@@ -1,36 +1,28 @@
 import HttpError from '@wasp/core/HttpError.js'
-
+import { ZodError } from 'zod';
+import { fromZodError } from 'zod-validation-error';
 import * as schema from './recipe.schema.js';
+import { GetRecipes, GetTags, GetRecipe } from '@wasp/queries/types.js'
+import { CreateRecipe, UpdateRecipe, DeleteRecipe } from '@wasp/actions/types.js'
 
-export async function getRecipes(userArgs, context) {
+export const getRecipes: GetRecipes<schema.GetRecipesParams, schema.GetRecipesResponse> = async (userArgs, context) => {
   if (!context.user) { throw new HttpError(401); }
   let args;
   try {
-    args = schema.getRecipes.validateSync(userArgs);
+    args = schema.GetRecipesParams.parse(userArgs);
   } catch (e) {
-    throw new HttpError(400, e.message);
-  }
-
-  const where = {
-    owner: { id: context.user.id },
-  };
-  if (args.tagSlugs) {
-    const tagIds = await context.entities.RecipeTag.findMany({
-      where: {
-        owner: { id: context.user.id },
-        slug: { in: args.tagSlugs },
-      },
-      select: { id: true },
-    });
-    where.tags = { in: tagIds };
-  }
-  if (args.q) {
-    // TODO: get Full-Text Search working https://www.prisma.io/docs/concepts/components/prisma-client/full-text-search
-    where.title = { contains: args.q };
+    if (e instanceof ZodError) {
+      throw new HttpError(400, fromZodError(e));
+    }
+    throw e;
   }
 
   const recipes = await context.entities.Recipe.findMany({
-    where,
+    where: {
+      owner: { id: context.user.id },
+      tags: args.tagSlugs ? { some: { slug: { in: args.tagSlugs } } } : undefined,
+      title: args.q ? { contains: args.q } : undefined,
+    },
     select: {
       slug: true,
       title: true,
@@ -53,7 +45,7 @@ export async function getRecipes(userArgs, context) {
   }));
 }
 
-export async function getTags(_userArgs, context) {
+export const getTags: GetTags<void, schema.GetTagsResponse> = async (_args, context) => {
   if (!context.user) { throw new HttpError(401); }
 
   return context.entities.RecipeTag.findMany({
@@ -68,15 +60,18 @@ export async function getTags(_userArgs, context) {
   });
 }
 
-export async function getRecipe(userArgs, context) {
+export const getRecipe: GetRecipe<schema.GetRecipeParams, schema.GetRecipeResponse> = async (userArgs, context) => {
   if (!context.user) { throw new HttpError(401); }
   let args;
   try {
-    args = schema.getRecipe.validateSync(userArgs);
+    args = schema.GetRecipeParams.parse(userArgs);
   } catch (e) {
-    throw new HttpError(400, e.message);
+    if (e instanceof ZodError) {
+      throw new HttpError(400, fromZodError(e));
+    }
+    throw e;
   }
-  
+
   const recipe = await context.entities.Recipe.findUnique({
     where: {
       slug: args.slug,
@@ -100,23 +95,27 @@ export async function getRecipe(userArgs, context) {
     throw new HttpError(404);
   }
 
-  recipe.tagSlugs = recipe.tags.map(t => t.slug);
-  delete recipe.tags;
-
-  return recipe;
+  return {
+    ...recipe,
+    tags: undefined,
+    tagSlugs: recipe.tags.map(t => t.slug),
+  }
 }
 
-export async function createRecipe(userArgs, context) {
+export const createRecipe: CreateRecipe<schema.CreateRecipeParams, schema.CreateRecipeResponse> = async (userArgs, context) => {
   if (!context.user) { throw new HttpError(401); }
   let args;
   try {
-    args = schema.createRecipe.validateSync(userArgs);
+    args = schema.CreateRecipeParams.parse(userArgs);
   } catch (e) {
-    throw new HttpError(400, e.message);
+    if (e instanceof ZodError) {
+      throw new HttpError(400, fromZodError(e));
+    }
+    throw e;
   }
 
   if (!authenticateTags(context, context.user.id, args.tagSlugs)) {
-    throw new HttpError(400);
+    throw new HttpError(400, 'invalid tags');
   }
 
   const slug = slugFromTitle(args.title);
@@ -135,7 +134,7 @@ export async function createRecipe(userArgs, context) {
         )),
       },
       tags: {
-        connect: args.tagSlugs.map(ts => ({slug: ts}))
+        connect: args.tagSlugs.map(ts => ({ slug: ts }))
       },
       owner: { connect: { id: context.user.id } },
     },
@@ -143,13 +142,16 @@ export async function createRecipe(userArgs, context) {
   return { slug };
 }
 
-export async function deleteRecipe(userArgs, context) {
+export const deleteRecipe: DeleteRecipe<schema.DeleteRecipeParams, schema.DeleteRecipeResponse> = async (userArgs, context) => {
   if (!context.user) { throw new HttpError(401); }
   let args;
   try {
-    args = schema.deleteRecipe.validateSync(userArgs);
+    args = schema.DeleteRecipeParams.parse(userArgs);
   } catch (e) {
-    throw new HttpError(400, e.message);
+    if (e instanceof ZodError) {
+      throw new HttpError(400, fromZodError(e));
+    }
+    throw e;
   }
 
   // Make sure the logged in user owns the recipe
@@ -172,13 +174,16 @@ export async function deleteRecipe(userArgs, context) {
   });
 }
 
-export async function updateRecipe(userArgs, context) {
+export const updateRecipe: UpdateRecipe<schema.UpdateRecipeParams, schema.UpdateRecipeResponse> = async (userArgs, context) => {
   if (!context.user) { throw new HttpError(401); }
   let args;
   try {
-    args = schema.updateRecipe.validateSync(userArgs);
+    args = schema.UpdateRecipeParams.parse(userArgs);
   } catch (e) {
-    throw new HttpError(400, e.message);
+    if (e instanceof ZodError) {
+      throw new HttpError(400, fromZodError(e));
+    }
+    throw e;
   }
 
   // Check that the recipe to update exists and is owned by the logged in user
@@ -199,7 +204,7 @@ export async function updateRecipe(userArgs, context) {
   const { id: recipeId } = oldRecipe;
 
   // Ensure ownership and existence of tags
-  if (!authenticateTags(context, context.user.id, args.tagSlugs)) {
+  if (!authenticateTags(context, context.user.id, args.tagSlugs || [])) {
     throw new HttpError(404, 'Tag not found');
   }
 
@@ -214,15 +219,16 @@ export async function updateRecipe(userArgs, context) {
       time: args.time,
       servings: args.servings,
       imageURI: args.imageURI,
-      tags: {
+      tags: args.tagSlugs ? {
         set: args.tagSlugs.map(ts => ({ slug: ts })),
-      },
+      } : undefined,
       // Ingredients will be updated in the next step
       instructions: args.instructions,
     },
   });
 
   // TODO: is it worth to diff old and new ingredients?
+  // TODO: can this be done in 1 query along with the updating the recipe?
 
   // Remove old ingredients
   await context.entities.Ingredient.deleteMany({
@@ -231,15 +237,17 @@ export async function updateRecipe(userArgs, context) {
     },
   });
   // Add new ingredients
-  await Promise.all(args.ingredients.map(ingredient => (
-    context.entities.Ingredient.create({
-      data: {
-        text: ingredient.text,
-        recipe: { connect: { id: recipeId } },
-      },
-    })
-  )));
-} 
+  if (args.ingredients) {
+    await Promise.all(args.ingredients.map(ingredient => (
+      context.entities.Ingredient.create({
+        data: {
+          text: ingredient.text,
+          recipe: { connect: { id: recipeId } },
+        },
+      })
+    )));
+  }
+}
 
 /**
  * `authenticateTags(context, userId, tagSlugs)` returns true only when:
@@ -247,7 +255,7 @@ export async function updateRecipe(userArgs, context) {
  * 1) All tag slugs are valid tag slugs
  * 2) Each tag slug represents a tag owned by `userId`
  */
-async function authenticateTags(context, userId, tagSlugs) {
+async function authenticateTags(context: any, userId: number, tagSlugs: string[]): Promise<boolean> {
   // Will only be `tagSlugs.length` if the conditions above are met
   const nTags = await context.entities.RecipeTag.count({
     where: {
@@ -268,13 +276,13 @@ async function authenticateTags(context, userId, tagSlugs) {
  * - Converts title to kebab case
  * - Appends 10 character alphanumeric string
  */
-function slugFromTitle(title) {
+function slugFromTitle(title: string): string {
   const alphanumeric = 'abcdefghijklmnopqrtstuvwxyzABCDEFGHIJKLMNOPQRTSTUVWXYZ0123456789';
   const kebabCase = title.replace(/[^a-zA-Z0-9]+/g, '-').replace(/-$/, '').toLowerCase();
   const randomness =
     [...new Array(10)]
-    .map(() => alphanumeric[Math.floor(Math.random() * alphanumeric.length)])
-    .join('')
-  ;
+      .map(() => alphanumeric[Math.floor(Math.random() * alphanumeric.length)])
+      .join('')
+    ;
   return `${kebabCase}-${randomness}`;
 }
