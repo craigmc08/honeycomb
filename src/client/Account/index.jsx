@@ -20,9 +20,11 @@ const AccountPage = (_props) => {
 
   const startNameChange = () => {
   };
-  const startEmailChange = () => { };
-  const startPasswordChange = () => { };
   const startDeleteAccount = () => { };
+  const startLanguageChange = () => { };
+
+  // TODO: how to get full list of supported languages?
+  const languages = ['Idioma', 'Langue', '语'].join(' / ');
 
   return (
     <Page
@@ -30,18 +32,23 @@ const AccountPage = (_props) => {
       active={"/account"}
       title={t('Your Account')}
     >
-      <h2>{t('Your Account')}</h2>
-      <h1>{name || 'Loading...'}</h1>
+      <div className="account-header">
+        <h2>{t('Your Account')}</h2>
+        <h1>{name}</h1>
+      </div>
+      <div className="account-main">
+        <h2 className="account-welcome-msg">{t('Welcome, {{name}}!', { name })}</h2>
 
-      <h2 className="account-welcome-msg">{t('Welcome, {{name}}!', { name })}</h2>
+        <ul className="account-items">
+          <li><button onClick={startNameChange}>{t('Change Name')}</button></li>
+          <li><Link to="/manage-tags">{t('Manage Tags')}</Link></li>
+          <li><button onClick={startLanguageChange}>{t('Language')}<span className="account-item-sub">{languages}</span></button></li>
+          <li><button className="account-item-warn" onClick={startDeleteAccount}>{t('Delete Account')}</button></li>
+        </ul>
+      </div>
 
-      <ul className="account-items">
-        <li><button onClick={startNameChange}>{t('Change Name')}</button></li>
-        <li><button onClick={startEmailChange}>{t('Change Email')}</button></li>
-        <li><button onClick={startPasswordChange}>{t('Change Password')}</button></li>
-        <li><Link to="/manage-tags">{t('Manage Tags')}</Link></li>
-        <li><button className="account-item-warn" onClick={startDeleteAccount}>{t('Delete Account')}</button></li>
-      </ul>
+      <div className="footer-space"></div>
+      <Footer />
     </Page>
   )
 }

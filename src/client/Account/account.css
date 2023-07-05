@@ -1,1 +1,79 @@
+.account-page {
+  padding: 200px 0 0 0;
+  display: flex;
+  flex-direction: column;
+}
 
+.account-main {
+  padding: 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.account-header {
+  display: flex;
+  flex-direction: column;
+  padding: 0 32px;
+  gap: 0;
+}
+.account-header h2 {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--primary-light);
+}
+.account-header h1 {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.account-welcome-msg {
+  font-size: 28px;
+  display: none;
+}
+
+.account-items > * {
+  border-top: 1px solid var(--border);
+}
+.account-items > *:first-child {
+  border: none;
+}
+
+.account-items > * > * {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 16px 0;
+  margin: 0;
+  color: var(--primary);
+  font-size: 15px;
+  text-decoration: none;
+  width: 100%;
+  text-align: left;
+}
+.account-item-warn {
+  color: var(--error);
+}
+.account-item-sub {
+  color: var(--primary-light);
+  font-size: 12px;
+}
+
+@media only screen and (min-width: 600px) {
+  .account-page {
+    padding: 0;
+  }
+  .account-main {
+    width: 50%;
+    min-width: 600px;
+    margin: 0 auto;
+  }
+  .account-header {
+    display: none;
+  }
+  .account-welcome-msg {
+    display: block;
+  }
+}
