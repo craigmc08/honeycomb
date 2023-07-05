@@ -1,9 +1,6 @@
 import React from 'react';
 import Form from '../Form';
-import { useHistory } from 'react-router-dom'
-
-import signup from '@wasp/auth/signup';
-import login from '@wasp/auth/login';
+import { SignupForm } from '@wasp/auth/forms/Signup'
 
 const MESSAGES = {
   differentPassword: 'The passwords you entered do not match.',
@@ -11,41 +8,9 @@ const MESSAGES = {
 };
 
 const SignupPage = (_props) => {
-  const history = useHistory();
-
-  const handleSubmit = async (target, flashMessage) => {
-    // Validate form
-    if (target.password.value !== target.confirm_password.value) {
-      flashMessage(MESSAGES.differentPassword);
-      return false;
-    }
-
-    try {
-      await signup(
-        { name: target.name.value, username: target.email.value, password: target.password.value }
-      );
-      await login(target.email.value, target.password.value);
-
-      history.push('/recipes');
-    } catch (e) {
-      flashMessage(MESSAGES.unknown);
-    }
-
-    return true;
-  }
-
   return (
     <Form.Page>
-      <h1>Sign up</h1>
-      <p>Create your free Honeycomb account!</p>
-      <Form onSubmit={handleSubmit}>
-        <Form.Text required name="name" placeholder="Your Name" autoFocus />
-        <Form.Text required name="email" placeholder="Email" />
-        <Form.Password required name="password" placeholder="Password" />
-        <Form.Password required name="confirm_password" placeholder="Confirm Password" />
-        <Form.Submit value="Create my account" />
-      </Form>
-      <p className="text-small">Your password must be at least 8 characters long.</p>
+      <SignupForm />
     </Form.Page>
   )
 }

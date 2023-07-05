@@ -1,4 +1,4 @@
-import React, { useState}  from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -7,10 +7,7 @@ import '../main.css';
 import './account.css';
 
 import { useQuery } from '@wasp/queries';
-import getUsername from '@wasp/queries/getUsername';
-// import updateUsername from '@wasp/actions/updateUsername';
-// import updateEmail from '@wasp/actions/updateEmail';
-// import updatePassword from '@wasp/actions/updatePassword';
+import getName from '@wasp/queries/getName';
 
 import Footer from '../Footer';
 import Page from '../Page';
@@ -18,14 +15,14 @@ import Page from '../Page';
 const AccountPage = (_props) => {
   const { t } = useTranslation();
 
-  const { data: user } = useQuery(getUsername);
-  const username = user ? user.username : undefined;
+  const { data: user } = useQuery(getName);
+  const name = user ? user.name : undefined;
 
   const startNameChange = () => {
   };
-  const startEmailChange = () => {};
-  const startPasswordChange = () => {};
-  const startDeleteAccount = () => {};
+  const startEmailChange = () => { };
+  const startPasswordChange = () => { };
+  const startDeleteAccount = () => { };
 
   return (
     <Page
@@ -34,9 +31,9 @@ const AccountPage = (_props) => {
       title={t('Your Account')}
     >
       <h2>{t('Your Account')}</h2>
-      <h1>{username || 'Loading...'}</h1>
+      <h1>{name || 'Loading...'}</h1>
 
-      <h2 className="account-welcome-msg">{t('Welcome, {{name}}!', { name: username })}</h2>
+      <h2 className="account-welcome-msg">{t('Welcome, {{name}}!', { name })}</h2>
 
       <ul className="account-items">
         <li><button onClick={startNameChange}>{t('Change Name')}</button></li>

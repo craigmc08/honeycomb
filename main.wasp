@@ -5,8 +5,9 @@ app honeycomb {
   title: "Honeycomb",
   auth: {
     userEntity: User,
+    externalAuthEntity: SocialLogin,
     methods: {
-      usernameAndPassword: {}
+      google: {},
     },
     onAuthFailedRedirectTo: "/",
     onAuthSucceededRedirectTo: "/recipes"
@@ -68,23 +69,16 @@ page Account {
 
 // requires auth
 // args: none
-// returns: { username: String }
-query getUsername {
-  fn: import { getUsername } from "@server/api/account.js",
+// returns: { name: String }
+query getName {
+  fn: import { getName } from "@server/api/account.js",
   entities: [User]
 }
 // requires auth
-// args: { username: string }
+// args: { name: string }
 // returns nothing
-action updateUsername {
-  fn: import { updateUsername } from "@server/api/account.js",
-  entities: [User]
-}
-// requires auth
-// args: { email: string }
-// returns nothing (fails if email is no longer unique)
-action updateEmail {
-  fn: import { updateEmail } from "@server/api/account.js",
+action updateName {
+  fn: import { updateName } from "@server/api/account.js",
   entities: [User]
 }
 
@@ -138,12 +132,21 @@ action createRecipe {
 
 entity User {=psl
   id Int @id @default(autoincrement()) // Required to be Int by usernameAndPassword method
-  name String
-  username String @unique // This is actually email, but usernameAndPassword method requires it be called username
-  password String
+  name String?
+  externalAuthAssociations SocialLogin[]
 
   tags RecipeTag[]
   recipes Recipe[]
+psl=}
+
+entity SocialLogin {=psl
+  id Int @id @default(autoincrement())
+  provider String
+  providerId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+  createdAt DateTime @default(now())
+  @@unique([provider, providerId, userId])
 psl=}
 
 entity Recipe {=psl

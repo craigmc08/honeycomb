@@ -26,7 +26,6 @@ export type GetRecipeResponse = Omit<Recipe, 'tags'> & {
 }
 
 export const CreateRecipeParams = z.object({
-  slug: z.string(),
   title: z.string(),
   description: z.string(),
   time: z.string(),
@@ -43,7 +42,17 @@ export type CreateRecipeResponse = {
   slug: string,
 };
 
-export const UpdateRecipeParams = CreateRecipeParams.partial().required({ slug: true })
+export const UpdateRecipeParams = z.object({
+  slug: z.string(),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  time: z.string().optional(),
+  servings: z.string().optional(),
+  imageURI: z.string().optional(),
+  tagSlugs: z.array(z.string()).optional(),
+  ingredients: z.array(z.object({ text: z.string() })).optional(),
+  instructions: z.string().optional()
+})
 export type UpdateRecipeParams = z.infer<typeof UpdateRecipeParams>
 export type UpdateRecipeResponse = void;
 

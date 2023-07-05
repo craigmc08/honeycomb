@@ -14,7 +14,6 @@ const Toolbar = (props) => {
 
   const pages = [
     { name: t('Recipes'), to: '/recipes', icon: <FontAwesomeIcon icon={faListUl} /> },
-    { name: t('Menus'), to: '/menus', icon: <FontAwesomeIcon icon={faFolder} /> },
     { name: t('Account'), to: '/account', icon: <FontAwesomeIcon icon={faUser} /> }
   ];
 

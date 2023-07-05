@@ -2,11 +2,11 @@ import HttpError from '@wasp/core/HttpError.js';
 import { ZodError } from 'zod';
 import { fromZodError } from 'zod-validation-error';
 import * as schema from './account.schema.js';
-import { GetUsername } from '@wasp/queries/types.js';
-import { UpdateEmail, UpdateUsername } from '@wasp/actions/types.js';
+import { GetName } from '@wasp/queries/types.js';
+import { UpdateName } from '@wasp/actions/types.js';
 import { Prisma } from '@prisma/client';
 
-export const getUsername: GetUsername<void, schema.GetUsernameResponse> = async (_args, context) => {
+export const getName: GetName<void, schema.GetNameResponse> = async (_args, context) => {
   if (!context.user) { throw new HttpError(401); }
 
   const user = await context.entities.User.findUnique({
@@ -23,15 +23,15 @@ export const getUsername: GetUsername<void, schema.GetUsernameResponse> = async 
     throw new HttpError(500, 'IE001');
   }
 
-  return { username: user.name };
+  return { name: user.name };
 }
 
-export const updateUsername: UpdateUsername<schema.UpdateUsernameParams, schema.UpdateUsernameResponse> = async (userArgs, context) => {
+export const updateName: UpdateName<schema.UpdateNameParams, schema.UpdateNameResponse> = async (userArgs, context) => {
   if (!context.user) { throw new HttpError(401); }
 
   let args;
   try {
-    args = schema.UpdateUsernameParams.parse(userArgs);
+    args = schema.UpdateNameParams.parse(userArgs);
   } catch (e) {
     if (e instanceof ZodError) {
       throw new HttpError(400, fromZodError(e));
@@ -44,38 +44,7 @@ export const updateUsername: UpdateUsername<schema.UpdateUsernameParams, schema.
       id: context.user.id,
     },
     data: {
-      name: args.username,
+      name: args.name,
     },
   });
-}
-
-export const updateEmail: UpdateEmail<schema.UpdateEmailParams, schema.UpdateEmailResponse> = async (userArgs, context) => {
-  if (!context.user) { throw new HttpError(401); }
-  let args;
-  try {
-    args = schema.UpdateEmailParams.parse(userArgs);
-  } catch (e) {
-    if (e instanceof ZodError) {
-      throw new HttpError(400, fromZodError(e));
-    }
-    throw e;
-  }
-
-  try {
-    await context.entities.User.update({
-      where: {
-        id: context.user.id,
-      },
-      data: {
-        username: args.email,
-      },
-    });
-  } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      if (e.code === 'P2002') {
-        throw new HttpError(400, 'Email already in use');
-      }
-    }
-    throw e;
-  }
 }
