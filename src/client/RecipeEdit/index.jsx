@@ -118,14 +118,14 @@ function RecipeEditor(props) {
   }
 
   const titleInput = (
-      <input type="text" value={title} onChange={e => update(e, title, setTitle)} />
+    <input type="text" value={title} onChange={e => update(e, title, setTitle)} />
   );
   const saveButton = (
     <button title={props.slug ? t('Save') : t('Create recipe')} onClick={() => saveIfModified()} disabled={!modified}>
       <FontAwesomeIcon icon={faFloppyDisk} />
     </button>
   );
-  
+
   return (
     <OverflowMenuProvider>
       <Page
@@ -219,9 +219,9 @@ function TagsEditor(props) {
           const tag = tags.find(t => t.slug === slug);
           return (
             <li key={slug}>
-              <div className="recipe-tag" style={{'--tag-hue': tag.color}}>
+              <div className="recipe-tag" style={{ '--tag-hue': tag.color }}>
                 {tag.tag}
-                <button title={t('Remove tag')} onClick={() => remove(i)}><FontAwesomeIcon icon={faX}/></button>
+                <button title={t('Remove tag')} onClick={() => remove(i)}><FontAwesomeIcon icon={faX} /></button>
               </div>
             </li>
           );
@@ -264,11 +264,11 @@ function TagAddEditor(props) {
       <input autoFocus placeholder={t('Search tags')} type="text" value={q} onChange={e => setq(e.target.value)} />
       <ul className="tag-editor-list">
         {available.map(tag => (
-         <li key={tag.slug}>
-           <button title={t('Add tag')} className="recipe-tag" style={{'--tag-hue': tag.color}} onClick={() => add(tag)}>
-             <FontAwesomeIcon icon={faPlus}/>{tag.tag}
-           </button>
-         </li> 
+          <li key={tag.slug}>
+            <button title={t('Add tag')} className="recipe-tag" style={{ '--tag-hue': tag.color }} onClick={() => add(tag)}>
+              <FontAwesomeIcon icon={faPlus} />{tag.tag}
+            </button>
+          </li>
         ))}
       </ul>
     </div>
@@ -286,7 +286,7 @@ function IngredientsEditor(props) {
     if (newValue === props.ingredients[idx].txt) {
       return;
     }
-    
+
     const newIngredients = [
       ...props.ingredients.slice(0, idx),
       { ...props.ingredients[idx], text: newValue },
@@ -298,19 +298,19 @@ function IngredientsEditor(props) {
     const newIngredients = [...props.ingredients, { id: uuid(), text: '' }];
     props.update(newIngredients, props.setIngredients, true);
   };
-  
+
   // TODO: add ability to drag ingredients to reorder
   return (
     <div className="ingredients-editor">
-    <ul className="ingredients-editor">
-      {props.ingredients.map((ingredient, i) => (
-        <li key={ingredient.id}>
-          <button title={t('Remove ingredient')} onClick={() => remove(i)}><FontAwesomeIcon icon={faX} /></button>
-          <input type="text" value={ingredient.text} onChange={e => update(e.target.value, i)} />
-        </li>
-      ))}
-    </ul>
-    <button title={t('Add ingredient')} onClick={() => add()}><FontAwesomeIcon icon={faPlus} /></button>
+      <ul className="ingredients-editor">
+        {props.ingredients.map((ingredient, i) => (
+          <li key={ingredient.id}>
+            <button title={t('Remove ingredient')} onClick={() => remove(i)}><FontAwesomeIcon icon={faX} /></button>
+            <input type="text" value={ingredient.text} onChange={e => update(e.target.value, i)} />
+          </li>
+        ))}
+      </ul>
+      <button title={t('Add ingredient')} onClick={() => add()}><FontAwesomeIcon icon={faPlus} /></button>
     </div>
   )
 }

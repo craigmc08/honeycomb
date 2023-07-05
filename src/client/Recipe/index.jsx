@@ -28,7 +28,7 @@ function Recipe(props) {
     !recipe
       ? 'Loading...'
       : <h1 className="recipe-page-title">{recipe.title}<Link title={t('Edit (recipe)')} to={`/recipe/edit?slug=${slug}`}><FontAwesomeIcon icon={faPencil} /></Link></h1>
-  ;
+    ;
 
   return (
     <Page

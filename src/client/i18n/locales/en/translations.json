@@ -37,5 +37,8 @@
   "Change Password": "Change Password",
   "Manage Tags": "Manage Tags",
   "Language": "Language",
-  "Delete Account": "Delete Account"
+  "Delete Account": "Delete Account",
+
+  "Account Setup Welcome": "Welcome!",
+  "Account Setup Provide some details": "We just need you to provide us a few details to help us to finish setting up your account."
 }

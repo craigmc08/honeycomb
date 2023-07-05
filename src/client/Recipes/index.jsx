@@ -20,8 +20,10 @@ import { OverflowMenuProvider, OverflowMenuButton } from '../Components/Overflow
 import { Modal, ModalAction, ModalActions, ModalBody, ModalTitle } from '../Components/Modal';
 import Tag from '../Components/Tag';
 import Page from '../Page';
+import { useCheckAccountStatus } from '../auth';
 
 const RecipesPage = (_props) => {
+  const _ = useCheckAccountStatus(); // Use auth to make sure user gets sent to setup flow after creating an account
   const { t } = useTranslation();
 
   const { data: tags } = useQuery(getTags);
@@ -90,7 +92,7 @@ function RecentRecipes(props) {
 
 function RecipesSearch(props) {
   const { t } = useTranslation();
-  
+
   const tags = props.tags;
 
   const { selectedTags, setSelectedTags } = props;

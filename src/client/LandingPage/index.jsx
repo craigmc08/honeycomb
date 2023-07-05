@@ -1,15 +1,22 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import Flex from '../Flex';
 import Footer from '../Footer';
 import '../reset.css';
 import '../main.css';
 import honeycombImg from './honeycomb.jpg';
 import { Link } from 'react-router-dom';
+import useAuth from '@wasp/auth/useAuth';
 
 // major issue: can't put static assets anywhere, e.g. if I want to use an image in css instead of here
 // see the mess of landing.css for what has to be done to get an image as a background...
 
 const LandingPage = (_props) => {
+  const history = useHistory();
+  const { data: user } = useAuth();
+  if (user) {
+    history.push('/recipes');
+  }
   return (
     <main className="landing-page">
       <div className="landing-hero">

@@ -31,7 +31,6 @@ app honeycomb {
   },
 }
 
-
 route RootRoute { path: "/", to: LandingPage }
 page LandingPage {
   component: import Main from "@client/LandingPage"
@@ -49,22 +48,32 @@ page Signup {
 
 route RecipesRoute { path: "/recipes", to: Recipes }
 page Recipes {
-  component: import Recipes from "@client/Recipes"
+  component: import Recipes from "@client/Recipes",
+  authRequired: true,
 }
 
 route RecipeRoute { path: "/recipe/view/:slug", to: RecipePage }
 page RecipePage {
-  component: import Recipe from "@client/Recipe"
+  component: import Recipe from "@client/Recipe",
+  authRequired: true,
 }
 
 route RecipeEditRoute { path: "/recipe/edit", to: RecipeEdit }
 page RecipeEdit {
-  component: import RecipeEdit from "@client/RecipeEdit"
+  component: import RecipeEdit from "@client/RecipeEdit",
+  authRequired: true,
 }
 
 route AccountRoute { path: "/account", to: Account }
 page Account {
-  component: import Account from "@client/Account"
+  component: import Account from "@client/Account",
+  authRequired: true,
+}
+
+route AccountSetupRoute { path: "/account-setup", to: AccountSetup }
+page AccountSetup {
+  component: import AccountSetup from "@client/Account/Setup",
+  authRequired: true,
 }
 
 // requires auth
